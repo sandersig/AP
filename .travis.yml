@@ -2,5 +2,3 @@ language: java
 sudo: false
 script: mvn clean verify
 dist: xenial
-services:
-  - xvfb
