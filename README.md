@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/sandersig/AP.svg?branch=main)](https://travis-ci.com/sandersig/AP)
+
 # AP
-https://travis-ci.com/sandersig/AP.svg?branch=main
 Automatisk Provisjonskontroll laget for Elkjøp Stavanger Gruppen
