@@ -1,9 +1,12 @@
 package com.kritjo.ap;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainTest {
-    public static void main(String[] args) {
+public class MainTest {
+
+    @Test
+    public void testTest() {
         assertEquals(0,0);
     }
 }
