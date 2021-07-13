@@ -8,6 +8,15 @@
     <artifactId>AP</artifactId>
     <version>0.1-ALPHA</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
