@@ -1,4 +1,6 @@
 language: java
-sudo: false
-script: mvn clean verify
+os: linux
 dist: xenial
+jdk:
+ - openjdk15
+script: mvn clean verify
