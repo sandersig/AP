@@ -84,4 +84,10 @@ public abstract class ProvisionFile {
     public abstract int getTableID();
 
     public abstract void saveProfile(String name) throws IOException;
+
+    @Override
+    public String toString() {
+        // Intentionally no space after colon
+        return "ProvisionFile:" + name;
+    }
 }
