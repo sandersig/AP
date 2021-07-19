@@ -42,4 +42,23 @@ class ProvisionTest {
         Provision provision2 = new Provision(-1000);
         assertEquals(-1000, provision2.getProvision());
     }
+
+    @Test
+    void setProduct() throws NoSuchFieldException, IllegalAccessException {
+        provision.setProduct("product1");
+        Field f = provision.getClass().getDeclaredField("product");
+        f.setAccessible(true);
+        assertEquals("product1", f.get(provision));
+    }
+
+    @Test
+    void getProduct() throws NoSuchFieldException, IllegalAccessException {
+        assertEquals("", provision.getProduct());
+        Field f = provision.getClass().getDeclaredField("product");
+        f.setAccessible(true);
+        f.set(provision, "product1");
+        assertEquals("product1", provision.getProduct());
+        f.set(provision, "");
+        assertEquals("", provision.getProduct());
+    }
 }
