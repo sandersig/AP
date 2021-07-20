@@ -23,9 +23,9 @@ class CustomerTest {
     void addExpected() throws NoSuchFieldException, IllegalAccessException {
         Field f = customer.getClass().getDeclaredField("excpected");
         f.setAccessible(true);
-        ProvisionPool excpected = (ProvisionPool) f.get(customer);
+        ProvisionContainer excpected = (ProvisionContainer) f.get(customer);
         customer.addExpected(provision);
-        Field pf = excpected.getClass().getDeclaredField("pool");
+        Field pf = excpected.getClass().getDeclaredField("container");
         pf.setAccessible(true);
         ArrayList<Provision> excpectedArray = (ArrayList<Provision>) pf.get(excpected);
         assertEquals(provision, excpectedArray.get(0));
@@ -36,9 +36,9 @@ class CustomerTest {
     void addActual() throws NoSuchFieldException, IllegalAccessException {
         Field f = customer.getClass().getDeclaredField("actual");
         f.setAccessible(true);
-        ProvisionPool actual = (ProvisionPool) f.get(customer);
+        ProvisionContainer actual = (ProvisionContainer) f.get(customer);
         customer.addActual(provision);
-        Field pf = actual.getClass().getDeclaredField("pool");
+        Field pf = actual.getClass().getDeclaredField("container");
         pf.setAccessible(true);
         ArrayList<Provision> actualArray = (ArrayList<Provision>) pf.get(actual);
         assertEquals(provision, actualArray.get(0));

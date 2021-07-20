@@ -3,8 +3,8 @@ package com.kritjo.ap;
 public class Customer {
     private final String GSM;
     private final String NAME;
-    private final ProvisionPool excpected = new ProvisionPool();
-    private final ProvisionPool actual = new ProvisionPool();
+    private final ProvisionContainer excpected = new ProvisionContainer();
+    private final ProvisionContainer actual = new ProvisionContainer();
 
     public Customer(String GSM, String NAME) {
         assert Checks.onlyNumbers(GSM);

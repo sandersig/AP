@@ -3,30 +3,30 @@ package com.kritjo.ap;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ProvisionPool {
-    private final ArrayList<Provision> pool = new ArrayList<>();
+public class ProvisionContainer {
+    private final ArrayList<Provision> container = new ArrayList<>();
 
     public void add(Provision p) {
-        pool.add(p);
+        container.add(p);
     }
 
     public int sum() {
-        int sumPool = 0;
-        for (Provision p : pool) {
-            sumPool += p.getProvision();
+        int sumContainer = 0;
+        for (Provision p : container) {
+            sumContainer += p.getProvision();
         }
-        return sumPool;
+        return sumContainer;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pool);
+        return Objects.hash(container);
     }
 
     @Override
     public boolean equals(Object other) {
         if (!other.getClass().getSimpleName().equals(this.getClass().getSimpleName())) return false;
 
-        return sum() == ((ProvisionPool) other).sum();
+        return sum() == ((ProvisionContainer) other).sum();
     }
 }
