@@ -1,11 +1,11 @@
 package com.kritjo.ap;
 
 public class Provision {
-    private final int provision;
+    private final float provision;
     private String product = "";
     private String ref = "";
 
-    public Provision(int provision) {
+    public Provision(float provision) {
         this.provision = provision;
     }
 
@@ -25,7 +25,7 @@ public class Provision {
         return ref;
     }
 
-    public int getProvision() {
+    public float getProvision() {
         return provision;
     }
 }

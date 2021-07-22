@@ -1,9 +1,11 @@
 package com.kritjo.ap;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Scanner;
 
 public class CsvFile extends ProvisionFile{
     private String delim = ";";
@@ -11,9 +13,11 @@ public class CsvFile extends ProvisionFile{
     private int productCol = -1;
     private int refCol = -1;
     private int provisionCol = -1;
+    private int nameCol = -1;
+    private int startRow = 1;
 
-    public CsvFile(File file, String name) {
-        super(file, name);
+    public CsvFile(File file, String name, Type type) {
+        super(file, name, type);
     }
 
     @Override
@@ -28,14 +32,35 @@ public class CsvFile extends ProvisionFile{
 
     @Override
     public void saveProfile(String name) throws IOException {
-        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1) throw new IllegalStateException("Set columns first");
+        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
         File profile = new File(name+".txt");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name+".txt");
-            fileWriter.write("csv"+PROFILE_DELIM+delim+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol);
+            fileWriter.write("csv"+PROFILE_DELIM+delim+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
+        }
+    }
+
+    @Override
+    public void setNameCol(int nameCol) {
+        this.nameCol = nameCol;
+    }
+
+    @Override
+    public int getNameCol() {
+        return nameCol;
+    }
+
+
+    @Override
+    public void readCustomers(CustomerContainer container) throws FileNotFoundException {
+        Scanner sc = new Scanner(file);
+        for (int i = 0; i < startRow; i++) sc.nextLine();
+        while(sc.hasNextLine()) {
+            String[] line = sc.nextLine().split(delim);
+            container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
         }
     }
 
@@ -82,6 +107,16 @@ public class CsvFile extends ProvisionFile{
     @Override
     public void setTableID(int tableID) {
         throw new UnsupportedOperationException("Not supported for this filetype");
+    }
+
+    @Override
+    public void setStartRow(int startRow) {
+        this.startRow = startRow;
+    }
+
+    @Override
+    public int getStartRow() {
+        return startRow;
     }
 
     @Override

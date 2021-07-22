@@ -2,10 +2,14 @@ package com.kritjo.ap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +19,7 @@ class CsvFileTest {
 
     @BeforeEach
     void reset() {
-        csvFile = new CsvFile(new File("example.csv"), "CsvFile");
+        csvFile = new CsvFile(new File("example.csv"), "CsvFile", ProvisionFile.Type.ACTUAL);
     }
 
     @Test
@@ -29,10 +33,11 @@ class CsvFileTest {
         csvFile.setRefCol(3);
         csvFile.setGsmNrCol(0);
         csvFile.setProvisionCol(2);
+        csvFile.setNameCol(4);
         csvFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.txt"));
         String s = sc.nextLine();
-        assertEquals(s, "csv-;-0-1-3-2");
+        assertEquals(s, "csv-;-0-1-3-2-4-1");
         assertTrue((new File("testing.txt")).delete());
     }
 
@@ -152,5 +157,56 @@ class CsvFileTest {
         f.setAccessible(true);
         f.set(csvFile, 10);
         assertEquals(10, csvFile.getProvisionCol());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void readCustomers() throws FileNotFoundException, NoSuchFieldException, IllegalAccessException {
+        CustomerContainer container = new CustomerContainer();
+        csvFile.setGsmNrCol(0);
+        csvFile.setProductCol(1);
+        csvFile.setProvisionCol(2);
+        csvFile.setRefCol(3);
+        csvFile.setNameCol(4);
+        csvFile.readCustomers(container);
+
+        Field f = container.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        HashMap<String, Customer> customerHashMap = (HashMap<String, Customer>) f.get(container);
+
+        Customer c = customerHashMap.get("12345678");
+        f = c.getClass().getDeclaredField("actual");
+        f.setAccessible(true);
+        ProvisionContainer cProvision = (ProvisionContainer) f.get(c);
+
+        f = cProvision.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        ArrayList<Provision> provisions = (ArrayList<Provision>) f.get(cProvision);
+
+        Provision prov1 = new Provision(1000);
+        prov1.setProduct("Tele1");
+        prov1.setRef("1234");
+
+        Provision prov2 = new Provision(500);
+        prov2.setProduct("Tele2");
+        prov2.setRef("4321");
+
+        assertTrue(new ReflectionEquals(prov1, "").matches(provisions.get(0)));
+        assertFalse(new ReflectionEquals(prov2, "").matches(provisions.get(1)));
+
+        c = customerHashMap.get("98765432");
+        f = c.getClass().getDeclaredField("actual");
+        f.setAccessible(true);
+        cProvision = (ProvisionContainer) f.get(c);
+
+        f = cProvision.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        provisions = (ArrayList<Provision>) f.get(cProvision);
+
+        Provision prov3 = new Provision(500);
+        prov3.setRef("4321");
+        prov3.setProduct("Tele2");
+
+        assertTrue(new ReflectionEquals(prov3, "").matches(provisions.get(0)));
     }
 }

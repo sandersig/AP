@@ -15,7 +15,7 @@ class PdfFileTest {
 
     @BeforeEach
     void reset() {
-        pdfFile = new PdfFile(new File("example.pdf"), "pdfFile");
+        pdfFile = new PdfFile(new File("example.pdf"), "pdfFile", ProvisionFile.Type.ACTUAL);
     }
 
     @Test
@@ -30,10 +30,11 @@ class PdfFileTest {
         pdfFile.setRefCol(1);
         pdfFile.setGsmNrCol(3);
         pdfFile.setProvisionCol(0);
+        pdfFile.setNameCol(4);
         pdfFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.txt"));
         String s = sc.nextLine();
-        assertEquals(s, "pdf-0-3-2-1-0");
+        assertEquals(s, "pdf-0-3-2-1-0-4");
         assertTrue((new File("testing.txt")).delete());
     }
 

@@ -2,10 +2,13 @@ package com.kritjo.ap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +18,9 @@ class HtmlFileTest {
 
     @BeforeEach
     void reset() {
-        htmlFile = new HtmlFile(new File("example.html"), "HtmlFile");
+        htmlFile = new HtmlFile(new File("example.html"), "HtmlFile", ProvisionFile.Type.ACTUAL);
     }
+
     @Test
     void saveProfile() throws IOException {
         try {
@@ -29,10 +33,11 @@ class HtmlFileTest {
         htmlFile.setRefCol(1);
         htmlFile.setGsmNrCol(3);
         htmlFile.setProvisionCol(0);
+        htmlFile.setNameCol(4);
         htmlFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.txt"));
         String s = sc.nextLine();
-        assertEquals(s, "html-0-3-2-1-0");
+        assertEquals(s, "html-0-3-2-1-0-4-1");
         assertTrue((new File("testing.txt")).delete());
     }
 
@@ -151,5 +156,57 @@ class HtmlFileTest {
         htmlFile.setTableID(0);
         tableID = (int) f.get(htmlFile);
         assertEquals(0, tableID);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void readCustomers() throws IOException, NoSuchFieldException, IllegalAccessException {
+        CustomerContainer container = new CustomerContainer();
+        htmlFile.setGsmNrCol(0);
+        htmlFile.setProductCol(1);
+        htmlFile.setProvisionCol(2);
+        htmlFile.setRefCol(3);
+        htmlFile.setNameCol(4);
+        htmlFile.setTableID(0);
+        htmlFile.readCustomers(container);
+
+        Field f = container.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        HashMap<String, Customer> customerHashMap = (HashMap<String, Customer>) f.get(container);
+
+        Customer c = customerHashMap.get("12345678");
+        f = c.getClass().getDeclaredField("actual");
+        f.setAccessible(true);
+        ProvisionContainer cProvision = (ProvisionContainer) f.get(c);
+
+        f = cProvision.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        ArrayList<Provision> provisions = (ArrayList<Provision>) f.get(cProvision);
+
+        Provision prov1 = new Provision(1000F);
+        prov1.setProduct("Tele1");
+        prov1.setRef("1234");
+
+        Provision prov2 = new Provision(500F);
+        prov2.setProduct("Tele2");
+        prov2.setRef("4321");
+
+        assertTrue(new ReflectionEquals(prov1, "").matches(provisions.get(0)));
+        assertFalse(new ReflectionEquals(prov2, "").matches(provisions.get(1)));
+
+        c = customerHashMap.get("98765432");
+        f = c.getClass().getDeclaredField("actual");
+        f.setAccessible(true);
+        cProvision = (ProvisionContainer) f.get(c);
+
+        f = cProvision.getClass().getDeclaredField("container");
+        f.setAccessible(true);
+        provisions = (ArrayList<Provision>) f.get(cProvision);
+
+        Provision prov3 = new Provision(500);
+        prov3.setRef("4321");
+        prov3.setProduct("Tele2");
+
+        assertTrue(new ReflectionEquals(prov3, "").matches(provisions.get(0)));
     }
 }

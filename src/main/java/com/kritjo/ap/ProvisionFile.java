@@ -7,12 +7,14 @@ import java.util.Scanner;
 
 public abstract class ProvisionFile {
     public static final String PROFILE_DELIM = "-";
-    private File file;
+    protected File file;
     private String name;
+    protected Type type;
 
-    public ProvisionFile(File file, String name) {
+    public ProvisionFile(File file, String name, Type type) {
         this.file = file;
         this.name = name;
+        this.type = type;
     }
 
     public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name) throws FileNotFoundException {
@@ -24,39 +26,46 @@ public abstract class ProvisionFile {
         ProvisionFile provisionFileFromProfile;
         switch (profile[0]) {
             case "csv" -> {
-                provisionFileFromProfile = new CsvFile(provisionFile, name);
+                provisionFileFromProfile = new CsvFile(provisionFile, name, Type.ACTUAL);
                 provisionFileFromProfile.setDelim(profile[1]);
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
                 provisionFileFromProfile.setRefCol(Integer.parseInt(profile[4]));
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
+                provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
+                provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
             }
             case "html" -> {
-                provisionFileFromProfile = new HtmlFile(provisionFile, name);
-                pdfHtmlSet(profile, provisionFileFromProfile);
+                provisionFileFromProfile = new HtmlFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile.setTableID(Integer.parseInt(profile[1]));
+                provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
+                provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
+                provisionFileFromProfile.setRefCol(Integer.parseInt(profile[4]));
+                provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
+                provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
+                provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
             }
             case "pdf" -> {
-                provisionFileFromProfile = new PdfFile(provisionFile, name);
-                pdfHtmlSet(profile, provisionFileFromProfile);
+                provisionFileFromProfile = new PdfFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile.setTableID(Integer.parseInt(profile[1]));
+                provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
+                provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
+                provisionFileFromProfile.setRefCol(Integer.parseInt(profile[4]));
+                provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
+                provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
             }
             case "excel" -> {
-                provisionFileFromProfile = new ExcelFile(provisionFile, name);
+                provisionFileFromProfile = new ExcelFile(provisionFile, name, Type.ACTUAL);
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[1]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setRefCol(Integer.parseInt(profile[3]));
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[4]));
+                provisionFileFromProfile.setNameCol(Integer.parseInt(profile[5]));
+                provisionFileFromProfile.setStartRow(Integer.parseInt(profile[6]));
             }
             default -> throw new IllegalArgumentException("Provided profile has wrong formating.");
         }
         return provisionFileFromProfile;
-    }
-
-    private static void pdfHtmlSet(String[] profile, ProvisionFile provisionFileFromProfile) {
-        provisionFileFromProfile.setTableID(Integer.parseInt(profile[1]));
-        provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
-        provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
-        provisionFileFromProfile.setRefCol(Integer.parseInt(profile[4]));
-        provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
     }
 
     public abstract void setProvisionCol(int provisionCol);
@@ -85,9 +94,28 @@ public abstract class ProvisionFile {
 
     public abstract void saveProfile(String name) throws IOException;
 
+    public abstract void setNameCol(int nameCol);
+
+    public abstract int getNameCol();
+
+    public abstract void readCustomers(CustomerContainer container) throws IOException;
+
+    public void setStartRow(int startRow) {
+        throw new UnsupportedOperationException("Not supported for this filetype");
+    }
+
+    public int getStartRow() {
+        throw new UnsupportedOperationException("Not supported for this filetype");
+    }
+
     @Override
     public String toString() {
         // Intentionally no space after colon
         return "ProvisionFile:" + name;
+    }
+
+    enum Type{
+        EXPECTED,
+        ACTUAL
     }
 }
