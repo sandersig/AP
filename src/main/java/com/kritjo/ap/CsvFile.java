@@ -7,13 +7,37 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Scanner;
 
+/**
+ * File profile object for csv files.
+ */
 public class CsvFile extends ProvisionFile{
+    /**
+     * Delimiter to be used as separator. Default is ;
+     */
     private String delim = ";";
+    /**
+     * Column number for gsm numbers. Index start 0. -1 for not set.
+     */
     private int gsmNrCol = -1;
+    /**
+     * Column number for product desctiption. Index start 0. -1 for not set.
+     */
     private int productCol = -1;
+    /**
+     * Column number for a referance. Index start 0. -1 for not set.
+     */
     private int refCol = -1;
+    /**
+     * Column number for provision column. Index start 0. -1 for not set.
+     */
     private int provisionCol = -1;
+    /**
+     * Column number for customer name. Index start 0. -1 for not set.
+     */
     private int nameCol = -1;
+    /**
+     * Row number for first row containing data. Index start 0. Default is 1, as we assume that the first row contains headers.
+     */
     private int startRow = 1;
 
     public CsvFile(File file, String name, Type type) {
@@ -30,6 +54,12 @@ public class CsvFile extends ProvisionFile{
         return provisionCol;
     }
 
+    /**
+     * Saves the profile to file, so that it could be used in the future without setting anything up.
+     * @param name Name of the saved profile.
+     * @throws IOException If the file could not be written to.
+     * @throws FileAlreadyExistsException If the file already exists.
+     */
     @Override
     public void saveProfile(String name) throws IOException {
         if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
@@ -54,6 +84,11 @@ public class CsvFile extends ProvisionFile{
     }
 
 
+    /**
+     * Read file and create customer objects in container.
+     * @param container that customer objects should be written to
+     * @throws FileNotFoundException If the file specified in the profile does not exist.
+     */
     @Override
     public void readCustomers(CustomerContainer container) throws FileNotFoundException {
         Scanner sc = new Scanner(file);

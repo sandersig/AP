@@ -5,10 +5,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Abstract implementation of file profiles.
+ */
 public abstract class ProvisionFile {
+    /**
+     * Constant that specifies the delimiter used in saved profiles.
+     */
     public static final String PROFILE_DELIM = "-";
+    /**
+     * Actual file that should use the profile.
+     */
     protected File file;
+    /**
+     * Name of this profile instance e.g. Telenor CSV 2020.
+     */
     private String name;
+    /**
+     * Actual or expected provision.
+     */
     protected Type type;
 
     public ProvisionFile(File file, String name, Type type) {
@@ -17,6 +32,13 @@ public abstract class ProvisionFile {
         this.type = type;
     }
 
+    /**
+     * @param profileName Name of saved profile
+     * @param provisionFile Actual file to use profile on
+     * @param name Name of this profile instance.
+     * @return a ProvisionFile of the actual subclass type.
+     * @throws FileNotFoundException If no profile with the provided name has been found.
+     */
     public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name) throws FileNotFoundException {
         File file = new File(profileName+".txt");
         Scanner sc = new Scanner(file);

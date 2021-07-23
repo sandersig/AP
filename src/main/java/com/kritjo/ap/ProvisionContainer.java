@@ -3,6 +3,9 @@ package com.kritjo.ap;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Container that manages provision objects. To be used inside a customer object.
+ */
 public class ProvisionContainer {
     private final ArrayList<Provision> container = new ArrayList<>();
 
@@ -10,6 +13,9 @@ public class ProvisionContainer {
         container.add(p);
     }
 
+    /**
+     * @return Sum of all provision in container.
+     */
     public int sum() {
         int sumContainer = 0;
         for (Provision p : container) {

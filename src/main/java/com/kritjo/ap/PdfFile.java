@@ -1,17 +1,37 @@
 package com.kritjo.ap;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
+/**
+ * File profile object for PDF files. Not implemented file reading yet.
+ */
 public class PdfFile extends ProvisionFile{
+    /**
+     * Table ID that contains provision table. Index start 0. -1 for not set. Non standard pdf format.
+     */
     private int tableID = -1;
+    /**
+     * Column number for gsm numbers. Index start 0. -1 for not set.
+     */
     private int gsmNrCol = -1;
+    /**
+     * Column number for product desctiption. Index start 0. -1 for not set.
+     */
     private int productCol = -1;
+    /**
+     * Column number for a referance. Index start 0. -1 for not set.
+     */
     private int refCol = -1;
+    /**
+     * Column number for provision column. Index start 0. -1 for not set.
+     */
     private int provisionCol = -1;
+    /**
+     * Column number for customer name. Index start 0. -1 for not set.
+     */
     private int nameCol = -1;
 
     public PdfFile(File file, String name, Type type) {
@@ -28,6 +48,12 @@ public class PdfFile extends ProvisionFile{
         return provisionCol;
     }
 
+    /**
+     * Saves the profile to file, so that it could be used in the future without setting anything up.
+     * @param name Name of the saved profile.
+     * @throws IOException If the file could not be written to.
+     * @throws FileAlreadyExistsException If the file already exists.
+     */
     @Override
     public void saveProfile(String name) throws IOException {
         if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
@@ -51,6 +77,9 @@ public class PdfFile extends ProvisionFile{
         return nameCol;
     }
 
+    /**
+     * Not yet a supported operation. Will be implemented soonTM.
+     */
     @Override
     public void readCustomers(CustomerContainer container) {
         throw new UnsupportedOperationException("Not yet implemented");

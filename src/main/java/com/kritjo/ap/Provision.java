@@ -1,5 +1,8 @@
 package com.kritjo.ap;
 
+/**
+ * Provision object for one "line"/kickback of provision.
+ */
 public class Provision {
     private final float provision;
     private String product = "";
