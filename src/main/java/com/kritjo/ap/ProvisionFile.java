@@ -3,6 +3,8 @@ package com.kritjo.ap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -88,6 +90,18 @@ public abstract class ProvisionFile {
             default -> throw new IllegalArgumentException("Provided profile has wrong formating.");
         }
         return provisionFileFromProfile;
+    }
+
+    public static File[] existingProfiles() {
+        ArrayList<File> existingProfiles = new ArrayList<>();
+        File userDirectory = new File(System.getProperty("user.dir"));
+        for (File entry : Objects.requireNonNull(userDirectory.listFiles(), "no files in working dir")) {
+            if (entry.getName().endsWith(".prf")) {
+                existingProfiles.add(entry);
+            }
+        }
+
+        return existingProfiles.toArray(new File[0]);
     }
 
     public abstract void setProvisionCol(int provisionCol);
