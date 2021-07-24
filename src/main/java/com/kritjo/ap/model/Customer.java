@@ -1,4 +1,6 @@
-package com.kritjo.ap;
+package com.kritjo.ap.model;
+
+import com.kritjo.ap.Checks;
 
 /**
  * Customer object. GSM is unique ID. Contains two ProvisionContainers for expected and actual provision.

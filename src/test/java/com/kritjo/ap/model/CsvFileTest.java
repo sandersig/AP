@@ -1,5 +1,6 @@
-package com.kritjo.ap;
+package com.kritjo.ap.model;
 
+import com.kritjo.ap.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;

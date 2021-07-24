@@ -1,5 +1,7 @@
-package com.kritjo.ap;
+package com.kritjo.ap.model;
 
+import com.kritjo.ap.model.PdfFile;
+import com.kritjo.ap.model.ProvisionFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

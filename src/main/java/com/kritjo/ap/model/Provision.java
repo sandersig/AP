@@ -1,4 +1,4 @@
-package com.kritjo.ap;
+package com.kritjo.ap.model;
 
 /**
  * Provision object for one "line"/kickback of provision.

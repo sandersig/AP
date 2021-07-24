@@ -1,9 +1,10 @@
-package com.kritjo.ap;
+package com.kritjo.ap.view;
+
+import com.kritjo.ap.Controller;
+import com.kritjo.ap.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Locale;
 
 public class MainWindow extends JFrame {

@@ -1,20 +1,16 @@
-package com.kritjo.ap;
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.*;
+package com.kritjo.ap.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
 /**
- * File profile object for html files. Only one HTML table per HtmlFile object.
+ * File profile object for PDF files. Not implemented file reading yet.
  */
-public class HtmlFile extends ProvisionFile{
+public class PdfFile extends ProvisionFile{
     /**
-     * Table ID that contains provision table. Index start 0. -1 for not set. Non standard html format.
+     * Table ID that contains provision table. Index start 0. -1 for not set. Non standard pdf format.
      */
     private int tableID = -1;
     /**
@@ -37,12 +33,8 @@ public class HtmlFile extends ProvisionFile{
      * Column number for customer name. Index start 0. -1 for not set.
      */
     private int nameCol = -1;
-    /**
-     * Row number for first row containing data. Index start 0. Default is 1, as we assume that the first row contains headers.
-     */
-    private int startRow = 1;
 
-    public HtmlFile(File file, String name, Type type) {
+    public PdfFile(File file, String name, Type type) {
         super(file, name, type);
     }
 
@@ -54,16 +46,6 @@ public class HtmlFile extends ProvisionFile{
     @Override
     public int getProvisionCol() {
         return provisionCol;
-    }
-
-    @Override
-    public void setStartRow(int startRow) {
-        this.startRow = startRow;
-    }
-
-    @Override
-    public int getStartRow() {
-        return startRow;
     }
 
     /**
@@ -78,7 +60,7 @@ public class HtmlFile extends ProvisionFile{
         File profile = new File(name+".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name+".prf");
-            fileWriter.write("html"+PROFILE_DELIM+tableID+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
+            fileWriter.write("pdf"+PROFILE_DELIM+tableID+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -96,28 +78,11 @@ public class HtmlFile extends ProvisionFile{
     }
 
     /**
-     * Read file and create customer objects in container.
-     * @param container that customer objects should be written to
-     * @throws FileNotFoundException If the file specified in the profile does not exist.
+     * Not yet a supported operation. Will be implemented soonTM.
      */
     @Override
-    public void readCustomers(CustomerContainer container) throws IOException {
-        WebClient client = new WebClient();
-        HtmlPage page = client.getPage("file:"+file.getAbsolutePath());
-        DomNodeList<DomElement> x = page.getElementsByTagName("table");
-        HtmlTable table = (HtmlTable) x.get(tableID);
-
-        for (int i = startRow; i < table.getRowCount(); i++) {
-            HtmlTableRow row = table.getRow(i);
-            HtmlTableCell gsm = row.getCell(gsmNrCol);
-            HtmlTableCell provision = row.getCell(provisionCol);
-            HtmlTableCell product = row.getCell(productCol);
-            HtmlTableCell ref = row.getCell(refCol);
-            HtmlTableCell name = row.getCell(nameCol);
-
-            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
-                    ref.asNormalizedText(), name.asNormalizedText(), type);
-        }
+    public void readCustomers(CustomerContainer container) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override

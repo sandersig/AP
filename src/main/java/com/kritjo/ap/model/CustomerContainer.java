@@ -1,4 +1,4 @@
-package com.kritjo.ap;
+package com.kritjo.ap.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

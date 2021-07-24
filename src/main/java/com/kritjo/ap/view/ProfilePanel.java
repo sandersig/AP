@@ -1,9 +1,9 @@
-package com.kritjo.ap;
+package com.kritjo.ap.view;
+
+import com.kritjo.ap.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class ProfilePanel extends JPanel {

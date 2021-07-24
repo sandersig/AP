@@ -1,4 +1,6 @@
-package com.kritjo.ap;
+package com.kritjo.ap.view;
+
+import com.kritjo.ap.Controller;
 
 import javax.swing.*;
 import java.io.File;
