@@ -5,6 +5,7 @@ import com.kritjo.ap.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.Locale;
 
 public class MainWindow extends JFrame {
@@ -52,5 +53,14 @@ public class MainWindow extends JFrame {
         c.gridy = 1;
         add(profileManager, c);
         pack();
+    }
+
+    public JComponent profileManagerOptions(File profile) {
+        ProfileOptions profileOptions = new ProfileOptions(controller, profile);
+        c.gridy = 1;
+        c.gridx = 2;
+        add(profileOptions, c);
+        pack();
+        return profileOptions;
     }
 }

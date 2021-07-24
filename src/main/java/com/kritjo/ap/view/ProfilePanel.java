@@ -9,15 +9,14 @@ import java.io.File;
 public class ProfilePanel extends JPanel {
     private final Controller controller;
     private final GridBagConstraints c = new GridBagConstraints();
-    private File[] existingProfiles;
+    private final File[] existingProfiles;
 
     public ProfilePanel(Controller controller) {
         this.controller = controller;
+        existingProfiles = controller.existingProfiles();
     }
 
     public void initGUI() {
-        existingProfiles = controller.existingProfiles();
-
         setLayout(new GridBagLayout());
         c.ipadx = 15;
         c.ipady = 15;

@@ -6,10 +6,12 @@ import com.kritjo.ap.view.MainWindow;
 import com.kritjo.ap.view.ProfileButton;
 import com.kritjo.ap.view.ProfilePanel;
 
+import javax.swing.*;
 import java.io.File;
 
 public class Controller {
     private MainWindow mainWindow;
+    private JComponent temp;
 
     public void initGUI() {
         mainWindow = new MainWindow(this);
@@ -32,7 +34,8 @@ public class Controller {
     }
 
     public void profileButtonPressed(ProfileButton profileButton) {
-
+        if (temp != null) temp.setVisible(false);
+        temp = mainWindow.profileManagerOptions(profileButton.getProfile());
     }
 
     public void newProfile() {
