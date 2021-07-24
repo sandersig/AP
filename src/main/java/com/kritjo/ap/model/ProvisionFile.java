@@ -100,7 +100,6 @@ public abstract class ProvisionFile {
                 existingProfiles.add(entry);
             }
         }
-
         return existingProfiles.toArray(new File[0]);
     }
 

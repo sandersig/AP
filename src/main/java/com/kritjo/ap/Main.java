@@ -4,9 +4,6 @@ import com.kritjo.ap.model.ProvisionFile;
 
 import java.awt.*;
 
-/**
- * Dummy.
- */
 public class Main {
     public final static String TITLE = "AP";
 
@@ -17,7 +14,6 @@ public class Main {
     private static final Controller controller = new Controller();
 
     public static void main(String[] args) {
-        ProvisionFile.existingProfiles();
         controller.initGUI();
     }
 }
