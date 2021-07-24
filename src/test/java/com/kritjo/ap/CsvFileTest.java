@@ -35,10 +35,10 @@ class CsvFileTest {
         csvFile.setProvisionCol(2);
         csvFile.setNameCol(4);
         csvFile.saveProfile("testing");
-        Scanner sc = new Scanner(new File("testing.txt"));
+        Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "csv-;-0-1-3-2-4-1");
-        assertTrue((new File("testing.txt")).delete());
+        assertTrue((new File("testing.prf")).delete());
     }
 
     @Test

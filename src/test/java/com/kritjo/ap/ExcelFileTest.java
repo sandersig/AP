@@ -35,10 +35,10 @@ class ExcelFileTest {
         excelFile.setProvisionCol(0);
         excelFile.setNameCol(4);
         excelFile.saveProfile("testing");
-        Scanner sc = new Scanner(new File("testing.txt"));
+        Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "excel-3-2-1-0-4-1");
-        assertTrue((new File("testing.txt")).delete());
+        assertTrue((new File("testing.prf")).delete());
     }
 
     @Test

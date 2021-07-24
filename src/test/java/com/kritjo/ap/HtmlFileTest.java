@@ -35,10 +35,10 @@ class HtmlFileTest {
         htmlFile.setProvisionCol(0);
         htmlFile.setNameCol(4);
         htmlFile.saveProfile("testing");
-        Scanner sc = new Scanner(new File("testing.txt"));
+        Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "html-0-3-2-1-0-4-1");
-        assertTrue((new File("testing.txt")).delete());
+        assertTrue((new File("testing.prf")).delete());
     }
 
     @Test

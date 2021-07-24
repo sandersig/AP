@@ -67,9 +67,9 @@ public class ExcelFile extends ProvisionFile{
     @Override
     public void saveProfile(String name) throws IOException {
         if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
-        File profile = new File(name+".txt");
+        File profile = new File(name+".prf");
         if (profile.createNewFile()) {
-            FileWriter fileWriter = new FileWriter(name+".txt");
+            FileWriter fileWriter = new FileWriter(name+".prf");
             fileWriter.write("excel"+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
             fileWriter.close();
         } else {

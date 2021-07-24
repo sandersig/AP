@@ -32,10 +32,10 @@ class PdfFileTest {
         pdfFile.setProvisionCol(0);
         pdfFile.setNameCol(4);
         pdfFile.saveProfile("testing");
-        Scanner sc = new Scanner(new File("testing.txt"));
+        Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "pdf-0-3-2-1-0-4");
-        assertTrue((new File("testing.txt")).delete());
+        assertTrue((new File("testing.prf")).delete());
     }
 
     @Test

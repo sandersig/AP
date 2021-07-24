@@ -40,7 +40,7 @@ public abstract class ProvisionFile {
      * @throws FileNotFoundException If no profile with the provided name has been found.
      */
     public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name) throws FileNotFoundException {
-        File file = new File(profileName+".txt");
+        File file = new File(profileName+".prf");
         Scanner sc = new Scanner(file);
         String line = sc.nextLine();
         sc.close();
