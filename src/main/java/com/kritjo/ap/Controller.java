@@ -3,10 +3,9 @@ package com.kritjo.ap;
 import java.io.File;
 
 public class Controller {
-    private MainWindow mainWindow;
 
     public void initGUI() {
-        mainWindow = new MainWindow(this);
+        MainWindow mainWindow = new MainWindow(this);
         mainWindow.initGUI();
     }
 

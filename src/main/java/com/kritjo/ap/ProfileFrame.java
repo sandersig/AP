@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.io.File;
 
 public class ProfileFrame extends JFrame {
-    private Controller controller;
+    private final Controller controller;
     private File[] existingProfiles;
 
     public ProfileFrame(Controller controller) {
@@ -17,5 +17,6 @@ public class ProfileFrame extends JFrame {
         // Click to edit
         // Add new profiles
         // Done button
+        setVisible(true);
     }
 }

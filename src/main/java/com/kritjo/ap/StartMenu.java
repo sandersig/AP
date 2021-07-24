@@ -3,7 +3,7 @@ package com.kritjo.ap;
 import javax.swing.*;
 
 public class StartMenu extends JPanel {
-    private Controller controller;
+    private final Controller controller;
 
     public StartMenu(Controller controller) {
         this.controller = controller;

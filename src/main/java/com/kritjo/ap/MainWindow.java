@@ -44,4 +44,12 @@ public class MainWindow extends JFrame {
 
         setVisible(true);
     }
+
+    public void profileManager(ProfileFrame profileManager) {
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 1;
+        c.gridy = 1;
+        add(profileManager);
+        pack();
+    }
 }
