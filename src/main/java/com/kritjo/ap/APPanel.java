@@ -2,10 +2,10 @@ package com.kritjo.ap;
 
 import javax.swing.*;
 
-public class APFrame extends JFrame {
+public class APPanel extends JPanel {
     private Controller controller;
 
-    public APFrame(Controller controller) {
+    public APPanel(Controller controller) {
         this.controller = controller;
     }
 

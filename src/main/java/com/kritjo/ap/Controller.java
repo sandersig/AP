@@ -3,23 +3,35 @@ package com.kritjo.ap;
 import java.io.File;
 
 public class Controller {
+    private MainWindow mainWindow;
 
     public void initGUI() {
-        MainWindow mainWindow = new MainWindow(this);
+        mainWindow = new MainWindow(this);
         mainWindow.initGUI();
     }
 
     public void startAP() {
-        APFrame apFrame = new APFrame(this);
-        apFrame.initGUI();
+        APPanel apPanel = new APPanel(this);
+        apPanel.initGUI();
     }
 
     public void profileManager() {
-        ProfileFrame profileFrame = new ProfileFrame(this);
-        profileFrame.initGUI();
+        ProfilePanel profilePanel = new ProfilePanel(this);
+        profilePanel.initGUI();
+        mainWindow.profileManager(profilePanel);
     }
 
     public File[] existingProfiles() {
         return ProvisionFile.existingProfiles();
+    }
+
+    public void profileButtonPressed(ProfileButton profileButton) {
+
+    }
+
+    public void newProfile() {
+    }
+
+    public void goToMainMenu() {
     }
 }

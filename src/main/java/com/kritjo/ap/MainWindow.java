@@ -45,11 +45,11 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    public void profileManager(ProfileFrame profileManager) {
+    public void profileManager(ProfilePanel profileManager) {
         c.anchor = GridBagConstraints.CENTER;
         c.gridx = 1;
         c.gridy = 1;
-        add(profileManager);
+        add(profileManager, c);
         pack();
     }
 }
