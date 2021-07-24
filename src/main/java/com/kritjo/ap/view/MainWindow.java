@@ -33,14 +33,8 @@ public class MainWindow extends JFrame {
         start.setFont(Main.H1);
         add(start, c);
 
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridy = 1;
+        startMenu();
 
-        StartMenu startMenu = new StartMenu(controller);
-        startMenu.initGUI();
-        add(startMenu, c);
-
-        pack();
         // Center the window
         setLocationRelativeTo(null);
 
@@ -62,5 +56,17 @@ public class MainWindow extends JFrame {
         add(profileOptions, c);
         pack();
         return profileOptions;
+    }
+
+    public void startMenu() {
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridy = 1;
+
+        StartMenu startMenu = new StartMenu(controller);
+        startMenu.initGUI();
+        add(startMenu, c);
+
+        pack();
     }
 }
