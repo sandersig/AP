@@ -8,7 +8,10 @@ import org.apache.commons.io.FilenameUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashMap;
 
 public class NewProfilePanel extends JPanel {
     private final Controller controller;
@@ -16,10 +19,6 @@ public class NewProfilePanel extends JPanel {
 
     public NewProfilePanel(Controller controller) {
         this.controller = controller;
-        setBorder(BorderFactory.createMatteBorder(
-                1, 5, 1, 1, Color.red));
-        c.weightx = 10;
-        c.weighty = 10;
     }
 
     public void initGUI() {
@@ -29,7 +28,6 @@ public class NewProfilePanel extends JPanel {
 
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 2;
 
         JLabel tittel = new JLabel("Ny profil");
         tittel.setFont(Main.H2);
@@ -38,7 +36,7 @@ public class NewProfilePanel extends JPanel {
         JComponent[] firstStep = new JComponent[6];
         c.gridx = 0;
         c.gridy = 1;
-        c.gridwidth = 1;
+
         JLabel profileNameInfo = new JLabel("Profilnavn");
         profileNameInfo.setFont(Main.DEFAULTFONT);
         add(profileNameInfo, c);
@@ -104,15 +102,122 @@ public class NewProfilePanel extends JPanel {
             case ("html") -> provisionFile = new HtmlFile(selectedFile, name, type);
             default -> throw new IllegalStateException("Unexpected filetype: " + FilenameUtils.getExtension(selectedFile.getAbsolutePath()));
         }
-        JTable table = new JTable(provisionFile.showFile(), new String[]{"A", "B", "C", "D", "E", "F", "G"});
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = 5;
+        JLabel colorInfo = new JLabel("Velg en kolonne for hver av følgende egenskaper:");
+        colorInfo.setFont(Main.DEFAULTFONT);
+        add(colorInfo, c);
+        c.gridwidth = 1;
+
+        String[][] fileRead = provisionFile.showFile();
+        HashMap<String, Integer> headers = new HashMap<>();
+
+        char ch = 'A';
+        for (int i = 0; i < fileRead[0].length; i++) {
+            headers.put(String.valueOf(ch), i);
+            ch++;
+        }
+
+        c.weightx = 0.5;
+        c.gridy = 2;
+        c.gridx = 0;
+        JLabel gsmColInfo = new JLabel("Telefonnummer");
+        gsmColInfo.setFont(Main.DEFAULTFONT);
+        add(gsmColInfo, c);
+        c.gridy = 3;
+        c.gridx = 0;
+        JComboBox<String> gsmCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+        gsmCol.setFont(Main.DEFAULTFONT);
+        add(gsmCol, c);
+
+        c.gridy = 2;
+        c.gridx = 1;
+        JLabel provColInfo = new JLabel("Provision");
+        provColInfo.setFont(Main.DEFAULTFONT);
+        add(provColInfo, c);
+        c.gridy = 3;
+        c.gridx = 1;
+        JComboBox<String> provCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+        provCol.setFont(Main.DEFAULTFONT);
+        add(provCol, c);
+
+        c.gridy = 2;
+        c.gridx = 2;
+        JLabel refColInfo = new JLabel("Referanse");
+        refColInfo.setFont(Main.DEFAULTFONT);
+        add(refColInfo, c);
+        c.gridy = 3;
+        c.gridx = 2;
+        JComboBox<String> refCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+        refCol.setFont(Main.DEFAULTFONT);
+        add(refCol, c);
+
+        c.gridy = 2;
+        c.gridx = 3;
+        JLabel nameColInfo = new JLabel("Kundens navn");
+        nameColInfo.setFont(Main.DEFAULTFONT);
+        add(nameColInfo, c);
+        c.gridy = 3;
+        c.gridx = 3;
+        JComboBox<String> nameCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+        nameCol.setFont(Main.DEFAULTFONT);
+        add(nameCol, c);
+
+        c.gridy = 2;
+        c.gridx = 4;
+        JLabel productColInfo = new JLabel("Produkt/Årsak");
+        productColInfo.setFont(Main.DEFAULTFONT);
+        add(productColInfo, c);
+        c.gridy = 3;
+        c.gridx = 4;
+        JComboBox<String> productCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+        productCol.setFont(Main.DEFAULTFONT);
+        add(productCol, c);
+
+//        c.gridwidth = 4;
+//        c.gridy = 4;
+//        c.gridx = 0;
+//        JLabel rowInfo = new JLabel("Merk raden som inneholder første datapunkt(er)");
+//        add(rowInfo, c);
+
+        JTable table = new JTable(fileRead, headers.keySet().toArray(new String[0]));
         table.setFont(Main.DEFAULTFONT);
 
         JScrollPane container = new JScrollPane(table);
         table.setFillsViewportHeight(true);
-
-        c.gridwidth = 3;
+        table.setEnabled(false);
+        c.gridx = 0;
+        c.gridy = 5;
+        c.weightx = 5;
+        c.gridwidth = 5;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(container, c);
+
+        JLabel rowInfo = new JLabel("Hvilken rad inneholder første datapunkt(er)?");
+        c.gridx = 0;
+        c.gridy = 6;
+        c.weightx = 0.0;
+        c.fill = GridBagConstraints.NONE;
+        add(rowInfo, c);
+
+        SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1, 0, fileRead.length, 1);
+        JSpinner row = new JSpinner(spinnerNumberModel);
+        c.gridx = 1;
+        add(row, c);
+
+        JButton continueButton = new JButton("Fortsett");
+        continueButton.addActionListener(actionEvent -> {
+            provisionFile.setProvisionCol(headers.get((String) provCol.getSelectedItem()));
+            provisionFile.setProductCol(headers.get((String) productCol.getSelectedItem()));
+            provisionFile.setGsmNrCol(headers.get((String) gsmCol.getSelectedItem()));
+            provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
+            provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
+            provisionFile.setStartRow((Integer) row.getValue());
+        });
+        continueButton.setFont(Main.DEFAULTFONT);
+        c.gridx = 4;
+        add(continueButton, c);
     }
 
 }

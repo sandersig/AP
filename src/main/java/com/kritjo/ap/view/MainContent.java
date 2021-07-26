@@ -15,8 +15,6 @@ public class MainContent extends JPanel {
     }
 
     public void initGUI() {
-
-
         JLabel start = new JLabel("AP - Automatisk provisjonskontroll");
         start.setFont(Main.H1);
         add(start);

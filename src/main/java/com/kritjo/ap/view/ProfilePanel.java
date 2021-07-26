@@ -62,5 +62,6 @@ public class ProfilePanel extends JPanel {
         c.gridx = 2;
         add(component, c);
         temp = component;
+        controller.pack();
     }
 }

@@ -40,7 +40,9 @@ public class Controller {
     }
 
     public void newProfile() {
-        if (temp.peek().getClass().equals(ProfilePanel.class)) temp.pop().setVisible(false);
+        while (!temp.isEmpty() && (temp.peek().getClass().equals(ProfilePanel.class) ||
+                temp.peek().getClass().equals(ProfileOptions.class))) temp.pop().setVisible(false);
+
         NewProfilePanel newProfilePanel = new NewProfilePanel(this);
         newProfilePanel.initGUI();
         mainContent.newProfilePanel(newProfilePanel);
