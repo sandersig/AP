@@ -10,12 +10,12 @@ import java.util.Stack;
 public class Controller {
     private MainWindow mainWindow;
     private MainContent mainContent;
-    private Stack<JComponent> temp = new Stack<>();
+    private final Stack<JComponent> temp = new Stack<>();
 
     public void initGUI() {
         mainContent = new MainContent(this);
         mainContent.initGUI();
-        mainWindow = new MainWindow(mainContent, this);
+        mainWindow = new MainWindow(mainContent);
     }
 
     public void startAP() {

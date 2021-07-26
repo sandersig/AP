@@ -1,6 +1,5 @@
 package com.kritjo.ap.view;
 
-import com.kritjo.ap.Controller;
 import com.kritjo.ap.Main;
 
 import javax.swing.*;
@@ -8,7 +7,7 @@ import java.awt.*;
 import java.util.Locale;
 
 public class MainWindow extends JFrame {
-    public MainWindow(MainContent mainContent, Controller controller) {
+    public MainWindow(MainContent mainContent) {
         super(Main.TITLE);
         setMinimumSize(new Dimension(300, 300));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

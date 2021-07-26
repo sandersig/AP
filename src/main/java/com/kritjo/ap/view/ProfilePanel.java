@@ -27,9 +27,7 @@ public class ProfilePanel extends JPanel {
 
         JButton newProfile = new JButton("Ny profil");
         newProfile.setFont(Main.DEFAULTFONT);
-        newProfile.addActionListener(actionEvent -> {
-            controller.newProfile();
-        });
+        newProfile.addActionListener(actionEvent -> controller.newProfile());
         add(newProfile, c);
 
         if (existingProfiles.length != 0) c.gridy = existingProfiles.length;
@@ -37,9 +35,7 @@ public class ProfilePanel extends JPanel {
 
         JButton doneProfile = new JButton("Ferdig");
         doneProfile.setFont(Main.DEFAULTFONT);
-        doneProfile.addActionListener(actionEvent -> {
-            controller.goToMainMenu();
-        });
+        doneProfile.addActionListener(actionEvent -> controller.goToMainMenu());
         add(doneProfile, c);
 
         c.gridy = 0;
@@ -49,7 +45,7 @@ public class ProfilePanel extends JPanel {
         add(profileButtonInfo, c);
 
         for (int i = 0; i < existingProfiles.length; i++) {
-            c.gridy = i+1;
+            c.gridy = i + 1;
             ProfileButton profileButton = new ProfileButton(controller, existingProfiles[i]);
             add(profileButton, c);
         }

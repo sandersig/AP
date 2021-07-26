@@ -12,7 +12,7 @@ import java.nio.file.FileAlreadyExistsException;
 /**
  * File profile object for html files. Only one HTML table per HtmlFile object.
  */
-public class HtmlFile extends ProvisionFile{
+public class HtmlFile extends ProvisionFile {
     /**
      * Table ID that contains provision table. Index start 0. -1 for not set. Non standard html format.
      */
@@ -74,17 +74,19 @@ public class HtmlFile extends ProvisionFile{
 
     /**
      * Saves the profile to file, so that it could be used in the future without setting anything up.
+     *
      * @param name Name of the saved profile.
-     * @throws IOException If the file could not be written to.
+     * @throws IOException                If the file could not be written to.
      * @throws FileAlreadyExistsException If the file already exists.
      */
     @Override
     public void saveProfile(String name) throws IOException {
-        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
-        File profile = new File(name+".prf");
+        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
+            throw new IllegalStateException("Set columns first");
+        File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
-            FileWriter fileWriter = new FileWriter(name+".prf");
-            fileWriter.write("html"+PROFILE_DELIM+tableID+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
+            FileWriter fileWriter = new FileWriter(name + ".prf");
+            fileWriter.write("html" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -103,13 +105,14 @@ public class HtmlFile extends ProvisionFile{
 
     /**
      * Read file and create customer objects in container.
+     *
      * @param container that customer objects should be written to
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
     @Override
     public void readCustomers(CustomerContainer container) throws IOException {
         WebClient client = new WebClient();
-        HtmlPage page = client.getPage("file:"+file.getAbsolutePath());
+        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
         DomNodeList<DomElement> x = page.getElementsByTagName("table");
         HtmlTable table = (HtmlTable) x.get(tableID);
 

@@ -14,9 +14,7 @@ public class ProfileButton extends JButton {
         setFont(Main.DEFAULTFONT);
         String name = profile.getName().substring(0, profile.getName().length() - 4);
         setText(name);
-        addActionListener(actionEvent -> {
-            controller.profileButtonPressed(this);
-        });
+        addActionListener(actionEvent -> controller.profileButtonPressed(this));
     }
 
     public File getProfile() {

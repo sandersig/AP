@@ -8,8 +8,6 @@ import org.apache.commons.io.FilenameUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
 
@@ -44,7 +42,7 @@ public class NewProfilePanel extends JPanel {
 
         c.gridx = 1;
         JTextField profileName = new JTextField();
-        profileName.setPreferredSize(new Dimension(200,25));
+        profileName.setPreferredSize(new Dimension(200, 25));
         profileName.setFont(Main.DEFAULTFONT);
         add(profileName, c);
         firstStep[1] = profileName;
@@ -81,9 +79,9 @@ public class NewProfilePanel extends JPanel {
             fileDial.setFileFilter(acceptedTypes);
             int status = fileDial.showOpenDialog(this);
 
-            if(status == JFileChooser.APPROVE_OPTION) {
+            if (status == JFileChooser.APPROVE_OPTION) {
                 newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
-                for (JComponent jc: firstStep) {
+                for (JComponent jc : firstStep) {
                     jc.setVisible(false);
                 }
             }
@@ -174,12 +172,6 @@ public class NewProfilePanel extends JPanel {
         JComboBox<String> productCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         productCol.setFont(Main.DEFAULTFONT);
         add(productCol, c);
-
-//        c.gridwidth = 4;
-//        c.gridy = 4;
-//        c.gridx = 0;
-//        JLabel rowInfo = new JLabel("Merk raden som inneholder første datapunkt(er)");
-//        add(rowInfo, c);
 
         JTable table = new JTable(fileRead, headers.keySet().toArray(new String[0]));
         table.setFont(Main.DEFAULTFONT);
