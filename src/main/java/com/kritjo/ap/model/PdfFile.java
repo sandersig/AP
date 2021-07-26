@@ -86,6 +86,12 @@ public class PdfFile extends ProvisionFile{
     }
 
     @Override
+    public String[][] showFile() {
+        // NOT IMPLEMENTED
+        return new String[0][];
+    }
+
+    @Override
     public void setDelim(String delim) {
         throw new UnsupportedOperationException("Not supported for this filetype");
     }

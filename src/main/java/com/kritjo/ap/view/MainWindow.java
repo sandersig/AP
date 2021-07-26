@@ -5,76 +5,22 @@ import com.kritjo.ap.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.Locale;
 
 public class MainWindow extends JFrame {
-    private GridBagConstraints c = new GridBagConstraints();
-    private final Controller controller;
-
-    public MainWindow(Controller controller) {
+    public MainWindow(MainContent mainContent, Controller controller) {
         super(Main.TITLE);
-        this.controller = controller;
-
-        setLocale(new Locale("no"));
+        setMinimumSize(new Dimension(300, 300));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridBagLayout());
-    }
-
-    public void initGUI() {
-        c.ipadx = 15;
-        c.ipady = 15;
-
-        c.gridx = 1;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.PAGE_START;
-
-        JLabel start = new JLabel("AP - Automatisk provisjonskontroll");
-        start.setFont(Main.H1);
-        add(start, c);
-
-        startMenu();
-
-        // Center the window
+        setContentPane(mainContent);
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setLocale(new Locale("no"));
+        initGUI();
         setLocationRelativeTo(null);
+    }
 
+    private void initGUI() {
         setVisible(true);
-    }
-
-    public void profileManager(ProfilePanel profileManager) {
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridx = 1;
-        c.gridy = 1;
-        add(profileManager, c);
-        pack();
-    }
-
-    public JComponent profileManagerOptions(File profile) {
-        ProfileOptions profileOptions = new ProfileOptions(controller, profile);
-        c.gridy = 1;
-        c.gridx = 2;
-        add(profileOptions, c);
-        pack();
-        return profileOptions;
-    }
-
-    public void startMenu() {
-        c.gridx = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridy = 1;
-
-        StartMenu startMenu = new StartMenu(controller);
-        startMenu.initGUI();
-        add(startMenu, c);
-
-        pack();
-    }
-
-    public void newProfilePanel(NewProfilePanel newProfilePanel) {
-        c.gridx = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridy = 1;
-        add(newProfilePanel, c);
-        pack();
     }
 }

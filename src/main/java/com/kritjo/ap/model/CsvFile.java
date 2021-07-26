@@ -1,10 +1,15 @@
 package com.kritjo.ap.model;
 
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -152,6 +157,16 @@ public class CsvFile extends ProvisionFile{
     @Override
     public int getStartRow() {
         return startRow;
+    }
+
+    @Override
+    public String[][] showFile() {
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.detectFormatAutomatically();
+        CsvParser parser = new CsvParser(settings);
+        List<String[]> rows = parser.parseAll(file);
+        delim = parser.getDetectedFormat().getDelimiterString();
+        return rows.toArray(new String[0][0]);
     }
 
     @Override

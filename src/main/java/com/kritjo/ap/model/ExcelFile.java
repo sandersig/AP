@@ -49,6 +49,12 @@ public class ExcelFile extends ProvisionFile{
     }
 
     @Override
+    public String[][] showFile() {
+        // NOT IMPLEMENTED
+        return new String[0][];
+    }
+
+    @Override
     public void setProvisionCol(int provisionCol) {
         this.provisionCol = provisionCol;
     }

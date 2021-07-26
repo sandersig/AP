@@ -66,6 +66,12 @@ public class HtmlFile extends ProvisionFile{
         return startRow;
     }
 
+    @Override
+    public String[][] showFile() {
+        // NOT IMPLEMENTED
+        return new String[0][];
+    }
+
     /**
      * Saves the profile to file, so that it could be used in the future without setting anything up.
      * @param name Name of the saved profile.

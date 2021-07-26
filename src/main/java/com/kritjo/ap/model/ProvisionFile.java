@@ -153,4 +153,6 @@ public abstract class ProvisionFile {
         EXPECTED,
         ACTUAL
     }
+
+    public abstract String[][] showFile();
 }
