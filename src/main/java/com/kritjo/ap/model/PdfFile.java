@@ -1,9 +1,14 @@
 package com.kritjo.ap.model;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * File profile object for PDF files. Not implemented file reading yet.
@@ -56,7 +61,8 @@ public class PdfFile extends ProvisionFile{
      */
     @Override
     public void saveProfile(String name) throws IOException {
-        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
+        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
+            throw new IllegalStateException("Set columns first");
         File profile = new File(name+".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name+".prf");
@@ -81,8 +87,14 @@ public class PdfFile extends ProvisionFile{
      * Not yet a supported operation. Will be implemented soonTM.
      */
     @Override
-    public void readCustomers(CustomerContainer container) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void readCustomers(CustomerContainer container) throws IOException {
+        PDDocument document = PDDocument.load(file);
+        PDFTextStripper s = new PDFTextStripper();
+        String content = s.getText(document);
+
+        List<String> lines = new ArrayList<>();
+        content.lines().forEach(str -> lines.add(str));
+        System.out.println(lines.get(0));
     }
 
     @Override

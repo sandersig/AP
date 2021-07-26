@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Scanner;
@@ -155,5 +156,11 @@ class PdfFileTest {
         pdfFile.setTableID(0);
         tableID = (int) f.get(pdfFile);
         assertEquals(0, tableID);
+    }
+
+    CustomerContainer container = new CustomerContainer();
+    @Test
+    void checkIfTextIsReadInCorrectly() throws IOException {
+        pdfFile.readCustomers(container);
     }
 }

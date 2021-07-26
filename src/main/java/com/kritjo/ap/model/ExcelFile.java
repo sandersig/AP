@@ -14,11 +14,11 @@ public class ExcelFile extends ProvisionFile{
      */
     private int gsmNrCol = -1;
     /**
-     * Column number for product desctiption. Index start 0. -1 for not set.
+     * Column number for product description. Index start 0. -1 for not set.
      */
     private int productCol = -1;
     /**
-     * Column number for a referance. Index start 0. -1 for not set.
+     * Column number for a reference. Index start 0. -1 for not set.
      */
     private int refCol = -1;
     /**
@@ -118,12 +118,12 @@ public class ExcelFile extends ProvisionFile{
             ref.setCellType(CellType.STRING);
 
             String gsmConverted = gsm.toString();
-            float procisionConverted = Float.parseFloat(provision.toString());
+            float provisionConverted = Float.parseFloat(provision.toString());
             String productConverted = product.toString();
             String nameConverted = name.toString();
             String refConverted = ref.toString();
 
-            container.addCustomer(gsmConverted, procisionConverted, productConverted, refConverted, nameConverted, type);
+            container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
         }
     }
 
