@@ -9,60 +9,48 @@ import java.io.File;
 
 public class MainContent extends JPanel {
     private final Controller controller;
-    private final GridBagConstraints c = new GridBagConstraints();
 
     public MainContent(Controller controller) {
         this.controller = controller;
-        setLayout(new GridBagLayout());
     }
 
     public void initGUI() {
-        c.ipadx = 15;
-        c.ipady = 15;
 
-        c.gridx = 1;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.PAGE_START;
 
         JLabel start = new JLabel("AP - Automatisk provisjonskontroll");
         start.setFont(Main.H1);
-        add(start, c);
+        add(start);
 
         startMenu();
 
         setVisible(true);
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.NONE;
     }
 
     public void profileManager(ProfilePanel profileManager) {
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridx = 1;
-        c.gridy = 1;
-        add(profileManager, c);
+        add(profileManager);
     }
 
     public JComponent profileManagerOptions(File profile) {
-        c.gridy = 0;
-        c.gridx = 2;
+        Component[] arr = this.getComponents();
+        ProfilePanel component = null;
+        for (Component c : arr) {
+            if (c.getClass().equals(ProfilePanel.class)) {
+                component = (ProfilePanel) c;
+            }
+        }
         ProfileOptions profileOptions = new ProfileOptions(controller, profile);
-        add(profileOptions, c);
+        assert component != null;
+        component.addOptions(profileOptions);
         return profileOptions;
     }
 
     public void startMenu() {
-        c.gridy = 1;
-        c.gridx = 1;
-        c.anchor = GridBagConstraints.CENTER;
         StartMenu startMenu = new StartMenu(controller);
         startMenu.initGUI();
-        add(startMenu, c);
+        add(startMenu);
     }
 
     public void newProfilePanel(NewProfilePanel newProfilePanel) {
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridy = 1;
-        c.gridx = 1;
-        add(newProfilePanel, c);
+        add(newProfilePanel);
     }
 }

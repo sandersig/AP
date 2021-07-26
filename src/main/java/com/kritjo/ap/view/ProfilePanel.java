@@ -11,6 +11,7 @@ public class ProfilePanel extends JPanel {
     private final Controller controller;
     private final GridBagConstraints c = new GridBagConstraints();
     private final File[] existingProfiles;
+    private ProfileOptions temp = null;
 
     public ProfilePanel(Controller controller) {
         this.controller = controller;
@@ -54,5 +55,12 @@ public class ProfilePanel extends JPanel {
         }
 
         setVisible(true);
+    }
+
+    public void addOptions(ProfileOptions component) {
+        if (temp != null) temp.setVisible(false);
+        c.gridx = 2;
+        add(component, c);
+        temp = component;
     }
 }
