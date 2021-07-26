@@ -69,4 +69,12 @@ public class MainWindow extends JFrame {
 
         pack();
     }
+
+    public void newProfilePanel(NewProfilePanel newProfilePanel) {
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridy = 1;
+        add(newProfilePanel, c);
+        pack();
+    }
 }

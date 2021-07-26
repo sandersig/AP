@@ -149,7 +149,7 @@ public abstract class ProvisionFile {
         return "ProvisionFile:" + name;
     }
 
-    enum Type{
+    public enum Type{
         EXPECTED,
         ACTUAL
     }

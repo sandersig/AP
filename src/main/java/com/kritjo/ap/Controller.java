@@ -38,12 +38,18 @@ public class Controller {
     }
 
     public void newProfile() {
+        if (temp.peek().getClass().equals(ProfilePanel.class)) temp.pop().setVisible(false);
+        NewProfilePanel newProfilePanel = new NewProfilePanel(this);
+        newProfilePanel.initGUI();
+        mainWindow.newProfilePanel(newProfilePanel);
+        temp.add(newProfilePanel);
     }
 
     public void goToMainMenu() {
         for (JComponent jComponent : temp) {
             jComponent.setVisible(false);
         }
+        temp.clear();
         mainWindow.startMenu();
     }
 }

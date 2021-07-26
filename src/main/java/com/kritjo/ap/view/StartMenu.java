@@ -1,6 +1,7 @@
 package com.kritjo.ap.view;
 
 import com.kritjo.ap.Controller;
+import com.kritjo.ap.Main;
 
 import javax.swing.*;
 
@@ -13,6 +14,7 @@ public class StartMenu extends JPanel {
 
     public void initGUI() {
         JButton profilManager = new JButton("Profiladministrator");
+        profilManager.setFont(Main.DEFAULTFONT);
         profilManager.addActionListener(actionEvent -> {
             setVisible(false);
             controller.profileManager();
@@ -21,6 +23,7 @@ public class StartMenu extends JPanel {
         add(profilManager);
 
         JButton startAP = new JButton("Start provisionskontroll");
+        startAP.setFont(Main.DEFAULTFONT);
         startAP.addActionListener(actionEvent -> {
             setVisible(false);
             controller.startAP();

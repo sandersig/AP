@@ -1,6 +1,7 @@
 package com.kritjo.ap.view;
 
 import com.kritjo.ap.Controller;
+import com.kritjo.ap.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class ProfilePanel extends JPanel {
         if (existingProfiles.length != 0) c.gridy = existingProfiles.length - 1;
 
         JButton newProfile = new JButton("Ny profil");
+        newProfile.setFont(Main.DEFAULTFONT);
         newProfile.addActionListener(actionEvent -> {
             controller.newProfile();
         });
@@ -33,6 +35,7 @@ public class ProfilePanel extends JPanel {
         else c.gridy = 1;
 
         JButton doneProfile = new JButton("Ferdig");
+        doneProfile.setFont(Main.DEFAULTFONT);
         doneProfile.addActionListener(actionEvent -> {
             controller.goToMainMenu();
         });
@@ -41,6 +44,7 @@ public class ProfilePanel extends JPanel {
         c.gridy = 0;
         c.gridx = 1;
         JLabel profileButtonInfo = new JLabel("Trykk på en eksisterende profil for å endre");
+        profileButtonInfo.setFont(Main.DEFAULTFONT);
         add(profileButtonInfo, c);
 
         for (int i = 0; i < existingProfiles.length; i++) {
