@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * File profile object for PDF files. Not implemented file reading yet.
@@ -38,9 +39,23 @@ public class PdfFile extends ProvisionFile{
      * Column number for customer name. Index start 0. -1 for not set.
      */
     private int nameCol = -1;
+    /**
+     * Row number for first row containing data. Index start 0. Default is 1, as we assume that the first row contains headers.
+     */
+    private int startRow = 1;
 
     public PdfFile(File file, String name, Type type) {
         super(file, name, type);
+    }
+
+    @Override
+    public void setStartRow(int startRow) {
+        this.startRow = startRow;
+    }
+
+    @Override
+    public int getStartRow() {
+        return startRow;
     }
 
     @Override
@@ -94,7 +109,25 @@ public class PdfFile extends ProvisionFile{
 
         List<String> lines = new ArrayList<>();
         content.lines().forEach(str -> lines.add(str));
-        System.out.println(lines.get(0));
+
+        for(String line : lines){
+            String[] arrSplit = line.split(" ");
+
+            if(arrSplit[provisionCol].matches("[a-zA-Z]+"))
+                continue;
+
+            String gsmConverted = arrSplit[0];
+            String productConverted = arrSplit[1];
+            float provisionConverted = Float.parseFloat(arrSplit[2]);
+            String refConverted = arrSplit[3];
+
+            System.out.print("gsm: " + gsmConverted + " product: "+ productConverted + " provisionconverted: "+ provisionConverted + " ref: "+ refConverted + "\n");
+
+            container.addCustomer(gsmConverted,provisionConverted,productConverted,refConverted,"",type);
+        }
+
+
+
     }
 
     @Override
