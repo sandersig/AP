@@ -1,16 +1,20 @@
 package com.kritjo.ap.model;
 
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * File profile object for csv files.
  */
-public class CsvFile extends ProvisionFile{
+public class CsvFile extends ProvisionFile {
     /**
      * Delimiter to be used as separator. Default is ;
      */
@@ -56,17 +60,19 @@ public class CsvFile extends ProvisionFile{
 
     /**
      * Saves the profile to file, so that it could be used in the future without setting anything up.
+     *
      * @param name Name of the saved profile.
-     * @throws IOException If the file could not be written to.
+     * @throws IOException                If the file could not be written to.
      * @throws FileAlreadyExistsException If the file already exists.
      */
     @Override
     public void saveProfile(String name) throws IOException {
-        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
-        File profile = new File(name+".prf");
+        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
+            throw new IllegalStateException("Set columns first");
+        File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
-            FileWriter fileWriter = new FileWriter(name+".prf");
-            fileWriter.write("csv"+PROFILE_DELIM+delim+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
+            FileWriter fileWriter = new FileWriter(name + ".prf");
+            fileWriter.write("csv" + PROFILE_DELIM + delim + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -86,6 +92,7 @@ public class CsvFile extends ProvisionFile{
 
     /**
      * Read file and create customer objects in container.
+     *
      * @param container that customer objects should be written to
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
@@ -93,7 +100,7 @@ public class CsvFile extends ProvisionFile{
     public void readCustomers(CustomerContainer container) throws FileNotFoundException {
         Scanner sc = new Scanner(file);
         for (int i = 0; i < startRow; i++) sc.nextLine();
-        while(sc.hasNextLine()) {
+        while (sc.hasNextLine()) {
             String[] line = sc.nextLine().split(delim);
             container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
         }
@@ -152,6 +159,16 @@ public class CsvFile extends ProvisionFile{
     @Override
     public int getStartRow() {
         return startRow;
+    }
+
+    @Override
+    public String[][] showFile() {
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.detectFormatAutomatically();
+        CsvParser parser = new CsvParser(settings);
+        List<String[]> rows = parser.parseAll(file);
+        delim = parser.getDetectedFormat().getDelimiterString();
+        return rows.toArray(new String[0][0]);
     }
 
     @Override

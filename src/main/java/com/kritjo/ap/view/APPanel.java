@@ -5,7 +5,7 @@ import com.kritjo.ap.Controller;
 import javax.swing.*;
 
 public class APPanel extends JPanel {
-    private Controller controller;
+    private final Controller controller;
 
     public APPanel(Controller controller) {
         this.controller = controller;

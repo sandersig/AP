@@ -7,12 +7,10 @@ import javax.swing.*;
 import java.io.File;
 
 public class ProfileOptions extends JPanel {
-    private Controller controller;
-    private File profile;
+    private final Controller controller;
 
     public ProfileOptions(Controller controller, File profile) {
         this.controller = controller;
-        this.profile = profile;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JButton delete = new JButton("Slett " + profile.getName().substring(0, profile.getName().length() - 4));
@@ -22,7 +20,6 @@ public class ProfileOptions extends JPanel {
             setVisible(false);
         });
         add(delete);
-
         setVisible(true);
     }
 }

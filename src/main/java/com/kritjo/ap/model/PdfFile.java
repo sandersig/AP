@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * File profile object for PDF files. Not implemented file reading yet.
  */
-public class PdfFile extends ProvisionFile{
+public class PdfFile extends ProvisionFile {
     /**
      * Table ID that contains provision table. Index start 0. -1 for not set. Non standard pdf format.
      */
@@ -70,8 +70,9 @@ public class PdfFile extends ProvisionFile{
 
     /**
      * Saves the profile to file, so that it could be used in the future without setting anything up.
+     *
      * @param name Name of the saved profile.
-     * @throws IOException If the file could not be written to.
+     * @throws IOException                If the file could not be written to.
      * @throws FileAlreadyExistsException If the file already exists.
      */
     @Override
@@ -80,8 +81,8 @@ public class PdfFile extends ProvisionFile{
             throw new IllegalStateException("Set columns first");
         File profile = new File(name+".prf");
         if (profile.createNewFile()) {
-            FileWriter fileWriter = new FileWriter(name+".prf");
-            fileWriter.write("pdf"+PROFILE_DELIM+tableID+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol);
+            FileWriter fileWriter = new FileWriter(name + ".prf");
+            fileWriter.write("pdf" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -128,6 +129,12 @@ public class PdfFile extends ProvisionFile{
 
 
 
+    }
+
+    @Override
+    public String[][] showFile() {
+        // NOT IMPLEMENTED
+        return new String[0][];
     }
 
     @Override

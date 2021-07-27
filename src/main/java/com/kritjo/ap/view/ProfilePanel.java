@@ -11,6 +11,7 @@ public class ProfilePanel extends JPanel {
     private final Controller controller;
     private final GridBagConstraints c = new GridBagConstraints();
     private final File[] existingProfiles;
+    private ProfileOptions temp = null;
 
     public ProfilePanel(Controller controller) {
         this.controller = controller;
@@ -26,9 +27,7 @@ public class ProfilePanel extends JPanel {
 
         JButton newProfile = new JButton("Ny profil");
         newProfile.setFont(Main.DEFAULTFONT);
-        newProfile.addActionListener(actionEvent -> {
-            controller.newProfile();
-        });
+        newProfile.addActionListener(actionEvent -> controller.newProfile());
         add(newProfile, c);
 
         if (existingProfiles.length != 0) c.gridy = existingProfiles.length;
@@ -36,9 +35,7 @@ public class ProfilePanel extends JPanel {
 
         JButton doneProfile = new JButton("Ferdig");
         doneProfile.setFont(Main.DEFAULTFONT);
-        doneProfile.addActionListener(actionEvent -> {
-            controller.goToMainMenu();
-        });
+        doneProfile.addActionListener(actionEvent -> controller.goToMainMenu());
         add(doneProfile, c);
 
         c.gridy = 0;
@@ -48,11 +45,19 @@ public class ProfilePanel extends JPanel {
         add(profileButtonInfo, c);
 
         for (int i = 0; i < existingProfiles.length; i++) {
-            c.gridy = i+1;
+            c.gridy = i + 1;
             ProfileButton profileButton = new ProfileButton(controller, existingProfiles[i]);
             add(profileButton, c);
         }
 
         setVisible(true);
+    }
+
+    public void addOptions(ProfileOptions component) {
+        if (temp != null) temp.setVisible(false);
+        c.gridx = 2;
+        add(component, c);
+        temp = component;
+        controller.pack();
     }
 }

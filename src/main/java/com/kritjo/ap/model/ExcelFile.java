@@ -1,6 +1,7 @@
 package com.kritjo.ap.model;
 
 import org.apache.poi.ss.usermodel.*;
+
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Iterator;
@@ -8,7 +9,7 @@ import java.util.Iterator;
 /**
  * File profile object for excel files. Works for both .xls and .xlsx
  */
-public class ExcelFile extends ProvisionFile{
+public class ExcelFile extends ProvisionFile {
     /**
      * Column number for gsm numbers. Index start 0. -1 for not set.
      */
@@ -49,6 +50,12 @@ public class ExcelFile extends ProvisionFile{
     }
 
     @Override
+    public String[][] showFile() {
+        // NOT IMPLEMENTED
+        return new String[0][];
+    }
+
+    @Override
     public void setProvisionCol(int provisionCol) {
         this.provisionCol = provisionCol;
     }
@@ -60,17 +67,19 @@ public class ExcelFile extends ProvisionFile{
 
     /**
      * Saves the profile to file, so that it could be used in the future without setting anything up.
+     *
      * @param name Name of the saved profile.
-     * @throws IOException If the file could not be written to.
+     * @throws IOException                If the file could not be written to.
      * @throws FileAlreadyExistsException If the file already exists.
      */
     @Override
     public void saveProfile(String name) throws IOException {
-        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1) throw new IllegalStateException("Set columns first");
-        File profile = new File(name+".prf");
+        if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
+            throw new IllegalStateException("Set columns first");
+        File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
-            FileWriter fileWriter = new FileWriter(name+".prf");
-            fileWriter.write("excel"+PROFILE_DELIM+gsmNrCol+PROFILE_DELIM+productCol+PROFILE_DELIM+refCol+PROFILE_DELIM+provisionCol+PROFILE_DELIM+nameCol+PROFILE_DELIM+startRow);
+            FileWriter fileWriter = new FileWriter(name + ".prf");
+            fileWriter.write("excel" + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -89,6 +98,7 @@ public class ExcelFile extends ProvisionFile{
 
     /**
      * Read file and create customer objects in container. Using Apache POI.
+     *
      * @param container that customer objects should be written to
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */

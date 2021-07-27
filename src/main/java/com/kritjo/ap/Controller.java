@@ -9,11 +9,13 @@ import java.util.Stack;
 
 public class Controller {
     private MainWindow mainWindow;
-    private Stack<JComponent> temp = new Stack<>();
+    private MainContent mainContent;
+    private final Stack<JComponent> temp = new Stack<>();
 
     public void initGUI() {
-        mainWindow = new MainWindow(this);
-        mainWindow.initGUI();
+        mainContent = new MainContent(this);
+        mainContent.initGUI();
+        mainWindow = new MainWindow(mainContent);
     }
 
     public void startAP() {
@@ -25,7 +27,7 @@ public class Controller {
         ProfilePanel profilePanel = new ProfilePanel(this);
         profilePanel.initGUI();
         temp.add(profilePanel);
-        mainWindow.profileManager(profilePanel);
+        mainContent.profileManager(profilePanel);
     }
 
     public File[] existingProfiles() {
@@ -34,14 +36,16 @@ public class Controller {
 
     public void profileButtonPressed(ProfileButton profileButton) {
         if (temp.peek().getClass().equals(ProfileOptions.class)) temp.pop().setVisible(false);
-        temp.add(mainWindow.profileManagerOptions(profileButton.getProfile()));
+        temp.add(mainContent.profileManagerOptions(profileButton.getProfile()));
     }
 
     public void newProfile() {
-        if (temp.peek().getClass().equals(ProfilePanel.class)) temp.pop().setVisible(false);
+        while (!temp.isEmpty() && (temp.peek().getClass().equals(ProfilePanel.class) ||
+                temp.peek().getClass().equals(ProfileOptions.class))) temp.pop().setVisible(false);
+
         NewProfilePanel newProfilePanel = new NewProfilePanel(this);
         newProfilePanel.initGUI();
-        mainWindow.newProfilePanel(newProfilePanel);
+        mainContent.newProfilePanel(newProfilePanel);
         temp.add(newProfilePanel);
     }
 
@@ -50,6 +54,14 @@ public class Controller {
             jComponent.setVisible(false);
         }
         temp.clear();
-        mainWindow.startMenu();
+        mainContent.startMenu();
+    }
+
+    public void back() {
+        temp.pop().setVisible(false);
+    }
+
+    public void pack() {
+        mainWindow.pack();
     }
 }

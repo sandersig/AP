@@ -28,6 +28,7 @@ public class CustomerContainer {
     /**
      * Adds a new customer to the container. If the customer already exists the provision object is instead added to the
      * exsisting customer.
+     *
      * @param type Actual or expected provision. The provision object is added to the according ProvisionContainer under
      *             the customer object.
      */

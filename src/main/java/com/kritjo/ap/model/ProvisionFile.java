@@ -35,14 +35,14 @@ public abstract class ProvisionFile {
     }
 
     /**
-     * @param profileName Name of saved profile
+     * @param profileName   Name of saved profile
      * @param provisionFile Actual file to use profile on
-     * @param name Name of this profile instance.
+     * @param name          Name of this profile instance.
      * @return a ProvisionFile of the actual subclass type.
      * @throws FileNotFoundException If no profile with the provided name has been found.
      */
     public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name) throws FileNotFoundException {
-        File file = new File(profileName+".prf");
+        File file = new File(profileName + ".prf");
         Scanner sc = new Scanner(file);
         String line = sc.nextLine();
         sc.close();
@@ -149,8 +149,10 @@ public abstract class ProvisionFile {
         return "ProvisionFile:" + name;
     }
 
-    public enum Type{
+    public enum Type {
         EXPECTED,
         ACTUAL
     }
+
+    public abstract String[][] showFile();
 }
