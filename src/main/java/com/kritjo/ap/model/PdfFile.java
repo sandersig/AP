@@ -114,7 +114,7 @@ public class PdfFile extends ProvisionFile {
         for(String line : lines){
             String[] arrSplit = line.split(" ");
 
-            if(arrSplit[provisionCol].matches("[a-zA-Z]+"))
+            if(arrSplit[2].matches("[a-zA-Z]+"))
                 continue;
 
             String gsmConverted = arrSplit[0];
