@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -142,7 +143,7 @@ public abstract class ProvisionFile {
     public abstract int getBrandCol();
 
     public abstract void readCustomers(CustomerContainer container) throws IOException;
-    public abstract void readCustomers(CustomerContainer container, String expectedBrand) throws IOException;
+    public abstract void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException;
 
     public void setStartRow(int startRow) {
         throw new UnsupportedOperationException("Not supported for this filetype");

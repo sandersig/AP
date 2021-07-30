@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -126,6 +127,37 @@ public class ExcelFile extends ProvisionFile {
         return brandCol;
     }
 
+    private Iterator<Row> getTableIterator() throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        Workbook workbook = WorkbookFactory.create(fileInputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        Iterator<Row> it = sheet.rowIterator();
+        return it;
+    }
+
+    private void createCostumerContainer(CustomerContainer container, Row row){
+        Cell gsm = row.getCell(gsmNrCol);
+        gsm.setCellType(CellType.STRING);
+        Cell provision = row.getCell(provisionCol);
+        provision.setCellType(CellType.NUMERIC);
+        Cell product = row.getCell(productCol);
+        product.setCellType(CellType.STRING);
+        Cell name = row.getCell(nameCol);
+        name.setCellType(CellType.STRING);
+        Cell ref = row.getCell(refCol);
+        ref.setCellType(CellType.STRING);
+
+        String gsmConverted = gsm.toString();
+        float provisionConverted = Float.parseFloat(provision.toString());
+        String productConverted = product.toString();
+        String nameConverted = name.toString();
+        String refConverted = ref.toString();
+
+        container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+
+    }
+
     /**
      * Read file and create customer objects in container. Using Apache POI.
      *
@@ -134,75 +166,37 @@ public class ExcelFile extends ProvisionFile {
      */
     @Override
     public void readCustomers(CustomerContainer container) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(file);
-        Workbook workbook = WorkbookFactory.create(fileInputStream);
-        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> it = getTableIterator();
 
-        Iterator<Row> it = sheet.rowIterator();
-
-        for (int i = 0; i < startRow; i++) {
+        for (int i = 0; i < startRow; i++)
             it.next();
-        }
 
         while (it.hasNext()) {
             Row row = it.next();
-            Cell gsm = row.getCell(gsmNrCol);
-            gsm.setCellType(CellType.STRING);
-            Cell provision = row.getCell(provisionCol);
-            provision.setCellType(CellType.NUMERIC);
-            Cell product = row.getCell(productCol);
-            product.setCellType(CellType.STRING);
-            Cell name = row.getCell(nameCol);
-            name.setCellType(CellType.STRING);
-            Cell ref = row.getCell(refCol);
-            ref.setCellType(CellType.STRING);
-
-            String gsmConverted = gsm.toString();
-            float provisionConverted = Float.parseFloat(provision.toString());
-            String productConverted = product.toString();
-            String nameConverted = name.toString();
-            String refConverted = ref.toString();
-
-            container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+            createCostumerContainer(container, row);
         }
     }
     @Override
-    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(file);
-        Workbook workbook = WorkbookFactory.create(fileInputStream);
-        Sheet sheet = workbook.getSheetAt(0);
+    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
+        Iterator<Row> it = getTableIterator();
 
-        Iterator<Row> it = sheet.rowIterator();
-
-        for (int i = 0; i < startRow; i++) {
+        for (int i = 0; i < startRow; i++)
             it.next();
-        }
 
         while (it.hasNext()) {
             Row row = it.next();
-            Cell gsm = row.getCell(gsmNrCol);
-            gsm.setCellType(CellType.STRING);
-            Cell provision = row.getCell(provisionCol);
-            provision.setCellType(CellType.NUMERIC);
-            Cell product = row.getCell(productCol);
-            product.setCellType(CellType.STRING);
-            Cell name = row.getCell(nameCol);
-            name.setCellType(CellType.STRING);
-            Cell ref = row.getCell(refCol);
-            ref.setCellType(CellType.STRING);
+
             Cell brand = row.getCell(brandCol);
             brand.setCellType(CellType.STRING);
-
-            String gsmConverted = gsm.toString();
-            float provisionConverted = Float.parseFloat(provision.toString());
-            String productConverted = product.toString();
-            String nameConverted = name.toString();
-            String refConverted = ref.toString();
             String brandConverted = brand.toString();
 
-            if (brandConverted.equals(expectedBrand)) {
-                container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+            if (!brandConverted.equals(expectedBrand))
+                continue;
+            if(!payedByHK.isEmpty()){
+                if(payedByHK.contains(row.getCell(productCol)))
+                    continue;
             }
+            createCostumerContainer(container, row);
         }
     }
 

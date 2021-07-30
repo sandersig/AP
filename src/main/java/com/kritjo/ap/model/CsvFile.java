@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -122,11 +123,16 @@ public class CsvFile extends ProvisionFile {
     }
 
     @Override
-    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
         Scanner sc = new Scanner(file);
         for (int i = 0; i < startRow; i++) sc.nextLine();
         while (sc.hasNextLine()) {
             String[] line = sc.nextLine().split(delim);
+
+            if(!payedByHK.isEmpty()){
+                if(payedByHK.contains(line[provisionCol]))
+                    continue;
+            }
             if (line[brandCol].equals(expectedBrand)) {
                 container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
             }

@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -147,7 +148,7 @@ public class PdfFile extends ProvisionFile {
 
     }
     @Override
-    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
         //TODO: Not implemented yet
     }
 

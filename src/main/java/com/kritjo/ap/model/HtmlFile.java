@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static java.lang.String.valueOf;
 
@@ -141,7 +142,7 @@ public class HtmlFile extends ProvisionFile {
      * @return The table that we will want to extract information from
      * @throws IOException
      */
-    public HtmlTable getTable() throws IOException {
+    private HtmlTable getTable() throws IOException {
         WebClient client = new WebClient();
         HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
         DomNodeList<DomElement> x = page.getElementsByTagName("table");
@@ -189,7 +190,7 @@ public class HtmlFile extends ProvisionFile {
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
     @Override
-    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
         HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {
@@ -197,7 +198,11 @@ public class HtmlFile extends ProvisionFile {
 
             if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
                 continue;
-            createCostumerContainer(container, row);
+            if(!payedByHK.isEmpty()){
+                if(payedByHK.contains(row.getCell(provisionCol)))
+                    continue;
+            }
+                createCostumerContainer(container, row);
         }
     }
 
