@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -110,10 +111,13 @@ public class NewProfilePanel extends JPanel {
         c.gridx = 0;
         c.gridwidth = 1;
 
+        // CsvFile and ExcelFile do not care about this, but for pdf and html files, this variable is used to
+        // extract a specific provision table from the file, as one file can contain multiple tables
         AtomicInteger tableID = new AtomicInteger();
 
+        // The extracted file information without any formating done is stored in fileRead[0]. This is updated if prev/
+        // next buttons are pressed and updateTable(...) is called.
         String[][][] fileRead = {provisionFile.showFile(tableID.get())};
-        HashMap<String, Integer> headers = new HashMap<>();
 
         while (fileRead[0].length == 0) {
             if (tableID.get() < provisionFile.tableCount()) {
@@ -124,6 +128,8 @@ public class NewProfilePanel extends JPanel {
             fileRead = new String[][][]{provisionFile.showFile(tableID.get())};
         }
 
+        // The columns get names A, B, C... in order to easily choose the right columns for parameters.
+        HashMap<String, Integer> headers = new HashMap<>();
         AtomicReference<Character> ch = new AtomicReference<>('A');
         for (int i = 0; i < fileRead[0][0].length; i++) {
             headers.put(String.valueOf(ch.get()), i);
@@ -220,6 +226,7 @@ public class NewProfilePanel extends JPanel {
         c.gridx = 1;
         add(row, c);
 
+        // Save profile to file after parameters is set.
         JButton continueButton = new JButton("Fortsett");
         continueButton.addActionListener(actionEvent -> {
             provisionFile.setProvisionCol(headers.get((String) provCol.getSelectedItem()));
@@ -242,6 +249,7 @@ public class NewProfilePanel extends JPanel {
         c.gridx = 4;
         add(continueButton, c);
 
+        // If the file is of html or pdf type, buttons for next and previous table is shown.
         if (FilenameUtils.getExtension(selectedFile.getAbsolutePath()).equals("html") ||
                 FilenameUtils.getExtension(selectedFile.getAbsolutePath()).equals("pdf")) {
             c.gridx = 1;
@@ -305,11 +313,9 @@ public class NewProfilePanel extends JPanel {
         table.get().setVisible(true);
         container.setViewportView(table.get());
 
-        updateComboBox(nameCol, headers);
-        updateComboBox(productCol, headers);
-        updateComboBox(gsmCol, headers);
-        updateComboBox(refCol, headers);
-        updateComboBox(provCol, headers);
+        for (JComboBox<String> comboBox : Arrays.asList(nameCol, productCol, gsmCol, refCol, provCol)) {
+            updateComboBox(comboBox, headers);
+        }
 
         spinnerNumberModel.setValue(1);
         spinnerNumberModel.setMaximum(fileRead[0].length);
