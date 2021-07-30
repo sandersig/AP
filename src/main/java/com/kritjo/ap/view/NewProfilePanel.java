@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class NewProfilePanel extends JPanel {
@@ -206,6 +207,12 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
+            try {
+                provisionFile.saveProfile(name);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            controller.goToMainMenu();
         });
         continueButton.setFont(Main.DEFAULTFONT);
         c.gridx = 4;
