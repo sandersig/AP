@@ -95,12 +95,12 @@ public class CsvFile extends ProvisionFile {
 
     @Override
     public void setBrandCol(int brandCol) {
-
+        this.brandCol = brandCol;
     }
 
     @Override
     public int getBrandCol() {
-        return 0;
+        return brandCol;
     }
 
 
@@ -121,8 +121,15 @@ public class CsvFile extends ProvisionFile {
     }
 
     @Override
-    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
-        //TODO: Not implemented yet
+    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
+        Scanner sc = new Scanner(file);
+        for (int i = 0; i < startRow; i++) sc.nextLine();
+        while (sc.hasNextLine()) {
+            String[] line = sc.nextLine().split(delim);
+            if (line[brandCol].equals(expectedBrand)) {
+                container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
+            }
+        }
     }
 
     @Override

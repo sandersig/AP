@@ -144,8 +144,7 @@ public class HtmlFile extends ProvisionFile {
         WebClient client = new WebClient();
         HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
         DomNodeList<DomElement> x = page.getElementsByTagName("table");
-        HtmlTable table = (HtmlTable) x.get(tableID);
-        return table;
+        return (HtmlTable) x.get(tableID);
     }
 
     /**c
@@ -189,13 +188,13 @@ public class HtmlFile extends ProvisionFile {
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
     @Override
-    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
+    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
         HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
 
-            if(!row.getCell(brandCol).asNormalizedText().equals(valueOf(expectedBrandCol)))
+            if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
                 continue;
             createCostumerContainer(container, row);
         }

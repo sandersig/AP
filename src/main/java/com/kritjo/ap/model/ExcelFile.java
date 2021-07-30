@@ -117,12 +117,12 @@ public class ExcelFile extends ProvisionFile {
 
     @Override
     public void setBrandCol(int brandCol) {
-
+        this.brandCol = brandCol;
     }
 
     @Override
     public int getBrandCol() {
-        return 0;
+        return brandCol;
     }
 
     /**
@@ -166,8 +166,43 @@ public class ExcelFile extends ProvisionFile {
         }
     }
     @Override
-    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
-        //TODO: Not implemented yet
+    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        Workbook workbook = WorkbookFactory.create(fileInputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        Iterator<Row> it = sheet.rowIterator();
+
+        for (int i = 0; i < startRow; i++) {
+            it.next();
+        }
+
+        while (it.hasNext()) {
+            Row row = it.next();
+            Cell gsm = row.getCell(gsmNrCol);
+            gsm.setCellType(CellType.STRING);
+            Cell provision = row.getCell(provisionCol);
+            provision.setCellType(CellType.NUMERIC);
+            Cell product = row.getCell(productCol);
+            product.setCellType(CellType.STRING);
+            Cell name = row.getCell(nameCol);
+            name.setCellType(CellType.STRING);
+            Cell ref = row.getCell(refCol);
+            ref.setCellType(CellType.STRING);
+            Cell brand = row.getCell(brandCol);
+            brand.setCellType(CellType.STRING);
+
+            String gsmConverted = gsm.toString();
+            float provisionConverted = Float.parseFloat(provision.toString());
+            String productConverted = product.toString();
+            String nameConverted = name.toString();
+            String refConverted = ref.toString();
+            String brandConverted = brand.toString();
+
+            if (brandConverted.equals(expectedBrand)) {
+                container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+            }
+        }
     }
 
     @Override

@@ -104,12 +104,12 @@ public class PdfFile extends ProvisionFile {
 
     @Override
     public void setBrandCol(int brandCol) {
-
+        this.brandCol = brandCol;
     }
 
     @Override
     public int getBrandCol() {
-        return 0;
+        return brandCol;
     }
 
     /**
@@ -146,7 +146,7 @@ public class PdfFile extends ProvisionFile {
 
     }
     @Override
-    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
+    public void readCustomers(CustomerContainer container, String expectedBrand) throws IOException {
         //TODO: Not implemented yet
     }
 
