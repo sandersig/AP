@@ -132,7 +132,7 @@ public class PdfFile extends ProvisionFile {
     }
 
     @Override
-    public String[][] showFile() {
+    public String[][] showFile(int tableID) {
         // NOT IMPLEMENTED
         return new String[0][];
     }

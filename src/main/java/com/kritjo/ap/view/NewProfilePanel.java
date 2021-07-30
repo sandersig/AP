@@ -113,7 +113,9 @@ public class NewProfilePanel extends JPanel {
         add(colorInfo, c);
         c.gridwidth = 1;
 
-        String[][] fileRead = provisionFile.showFile();
+        int tableID = 0;
+
+        String[][] fileRead = provisionFile.showFile(0);
         HashMap<String, Integer> headers = new HashMap<>();
 
         char ch = 'A';

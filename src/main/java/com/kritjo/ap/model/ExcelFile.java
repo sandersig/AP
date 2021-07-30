@@ -51,7 +51,7 @@ public class ExcelFile extends ProvisionFile {
     }
 
     @Override
-    public String[][] showFile() throws IOException {
+    public String[][] showFile(int tableID) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(file);
         Workbook workbook = WorkbookFactory.create(fileInputStream);
         Sheet sheet = workbook.getSheetAt(0);
