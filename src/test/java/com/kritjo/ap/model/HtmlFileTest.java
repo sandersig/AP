@@ -85,6 +85,11 @@ class HtmlFileTest {
     }
 
     @Test
+    void setBrandCol() throws NoSuchFieldException, IllegalAccessException {
+
+    }
+
+    @Test
     void getRefCol() throws IllegalAccessException, NoSuchFieldException {
         assertEquals(-1, htmlFile.getRefCol());
         Field f = htmlFile.getClass().getDeclaredField("refCol");

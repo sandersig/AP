@@ -133,7 +133,12 @@ public abstract class ProvisionFile {
 
     public abstract int getNameCol();
 
+    public abstract void setBrandCol(int brandCol);
+
+    public abstract int getBrandCol();
+
     public abstract void readCustomers(CustomerContainer container) throws IOException;
+    public abstract void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException;
 
     public void setStartRow(int startRow) {
         throw new UnsupportedOperationException("Not supported for this filetype");

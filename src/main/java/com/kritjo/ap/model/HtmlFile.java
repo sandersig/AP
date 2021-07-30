@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
+import static java.lang.String.valueOf;
+
 /**
  * File profile object for html files. Only one HTML table per HtmlFile object.
  */
@@ -41,6 +43,10 @@ public class HtmlFile extends ProvisionFile {
      * Row number for first row containing data. Index start 0. Default is 1, as we assume that the first row contains headers.
      */
     private int startRow = 1;
+    /**
+    * Row number for brand name. Index start 0. -1 for not set.
+    */
+    private int brandCol = -1;
 
     public HtmlFile(File file, String name, Type type) {
         super(file, name, type);
@@ -81,7 +87,7 @@ public class HtmlFile extends ProvisionFile {
      */
     @Override
     public void saveProfile(String name) throws IOException {
-        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
+        if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1 || (brandCol == -1 && type == Type.EXPECTED))
             throw new IllegalStateException("Set columns first");
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
@@ -103,18 +109,26 @@ public class HtmlFile extends ProvisionFile {
         return nameCol;
     }
 
+    @Override
+    public void setBrandCol(int brandCol) {
+        this.brandCol = brandCol;
+    }
+
+    @Override
+    public int getBrandCol() {
+        return brandCol;
+    }
+
     /**
      * Read file and create customer objects in container.
      *
+     * Used for ACTUAl objects
      * @param container that customer objects should be written to
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
     @Override
     public void readCustomers(CustomerContainer container) throws IOException {
-        WebClient client = new WebClient();
-        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
-        DomNodeList<DomElement> x = page.getElementsByTagName("table");
-        HtmlTable table = (HtmlTable) x.get(tableID);
+        HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
@@ -128,6 +142,43 @@ public class HtmlFile extends ProvisionFile {
                     ref.asNormalizedText(), name.asNormalizedText(), type);
         }
     }
+
+    public HtmlTable getTable() throws IOException {
+        WebClient client = new WebClient();
+        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
+        DomNodeList<DomElement> x = page.getElementsByTagName("table");
+        HtmlTable table = (HtmlTable) x.get(tableID);
+        return table;
+    }
+    /**
+     * Read file and create customer objects in container.
+     *
+     * Used for EXPECTED objects
+     * @param container that customer objects should be written to
+     * @throws FileNotFoundException If the file specified in the profile does not exist.
+     */
+    @Override
+    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
+        HtmlTable table = getTable();
+
+        //selve innlesingen av filen:
+        for (int i = startRow; i < table.getRowCount(); i++) {
+            HtmlTableRow row = table.getRow(i);
+
+            if(row.getCell(brandCol).asNormalizedText() != valueOf(expectedBrandCol))
+                continue;
+
+            HtmlTableCell gsm = row.getCell(gsmNrCol);
+            HtmlTableCell provision = row.getCell(provisionCol);
+            HtmlTableCell product = row.getCell(productCol);
+            HtmlTableCell ref = row.getCell(refCol);
+            HtmlTableCell name = row.getCell(nameCol);
+
+            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
+                    ref.asNormalizedText(), name.asNormalizedText(), type);
+        }
+    }
+
 
     @Override
     public void setDelim(String delim) {
