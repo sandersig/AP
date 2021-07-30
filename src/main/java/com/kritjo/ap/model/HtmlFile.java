@@ -196,13 +196,14 @@ public class HtmlFile extends ProvisionFile {
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
 
-            if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
-                continue;
+            //if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
+              //  continue;
+
             if(!payedByHK.isEmpty()){
-                if(payedByHK.contains(row.getCell(productCol)))
+                if(payedByHK.contains(row.getCell(productCol).asNormalizedText()))
                     continue;
             }
-                createCostumerContainer(container, row);
+            createCostumerContainer(container, row);
         }
     }
 

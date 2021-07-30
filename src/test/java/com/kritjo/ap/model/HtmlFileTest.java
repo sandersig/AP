@@ -17,10 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HtmlFileTest {
     HtmlFile htmlFile;
+    HtmlFile htmlFileWithHKCodes;
 
     @BeforeEach
     void reset() {
         htmlFile = new HtmlFile(new File("example.html"), "HtmlFile", ProvisionFile.Type.ACTUAL);
+        htmlFileWithHKCodes = new HtmlFile(new File("exampleWithHKCodes.html"), "HtmlFileWithHKCodes", ProvisionFile.Type.EXPECTED);
     }
 
     @Test
@@ -219,11 +221,21 @@ class HtmlFileTest {
     }
 
     @Test
-    void rowsIncludingCodesThatIsPayedByHKGetsSkippedByReadCostumer(){
-        HashSet<String> HKCodes = new HashSet<String>();
+    void rowsIncludingCodesThatIsPayedByHKGetsSkippedByReadCostumer() throws IOException {
+        HashSet<String> HKCodes = new HashSet<>();
         HKCodes.add("stntyv");
         HKCodes.add("swappluss");
-        
 
+        CustomerContainer container = new CustomerContainer();
+        htmlFileWithHKCodes.setGsmNrCol(0);
+        htmlFileWithHKCodes.setProductCol(1);
+        htmlFileWithHKCodes.setProvisionCol(2);
+        htmlFileWithHKCodes.setRefCol(3);
+        htmlFileWithHKCodes.setNameCol(4);
+        htmlFileWithHKCodes.setTableID(0);
+       // htmlFileWithHKCodes.setBrandCol(10); //test value
+        htmlFileWithHKCodes.readCustomers(container, HKCodes, "033");
+
+        assertEquals(3, container.getContainerSize());
     }
 }

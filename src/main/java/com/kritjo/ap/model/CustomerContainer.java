@@ -13,6 +13,14 @@ public class CustomerContainer {
     private final HashMap<String, Customer> container = new HashMap<>();
 
     /**
+     * Method that returns the size of the container. In other words, how many customers
+     * the container consists of
+     * @return
+     */
+    public int getContainerSize(){
+        return container.size();
+    }
+    /**
      * @return Customers with deviations as per Customer spesification.
      */
     public ArrayList<Customer> getDeviations() {
