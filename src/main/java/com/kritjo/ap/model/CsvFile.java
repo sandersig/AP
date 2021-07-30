@@ -43,6 +43,10 @@ public class CsvFile extends ProvisionFile {
      * Row number for first row containing data. Index start 0. Default is 1, as we assume that the first row contains headers.
      */
     private int startRow = 1;
+    /**
+     * Row number for brand name. Index start 0. -1 for not set.
+     */
+    private int brandCol = -1;
 
     public CsvFile(File file, String name, Type type) {
         super(file, name, type);
@@ -89,6 +93,16 @@ public class CsvFile extends ProvisionFile {
         return nameCol;
     }
 
+    @Override
+    public void setBrandCol(int brandCol) {
+
+    }
+
+    @Override
+    public int getBrandCol() {
+        return 0;
+    }
+
 
     /**
      * Read file and create customer objects in container.
@@ -104,6 +118,11 @@ public class CsvFile extends ProvisionFile {
             String[] line = sc.nextLine().split(delim);
             container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
         }
+    }
+
+    @Override
+    public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
+        //TODO: Not implemented yet
     }
 
     @Override

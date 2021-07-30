@@ -137,6 +137,35 @@ public class HtmlFile extends ProvisionFile {
     }
 
     /**
+     * Helper-method for readCostumers to get the table we want to read.
+     * @return The table that we will want to extract information from
+     * @throws IOException
+     */
+    public HtmlTable getTable() throws IOException {
+        WebClient client = new WebClient();
+        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
+        DomNodeList<DomElement> x = page.getElementsByTagName("table");
+        HtmlTable table = (HtmlTable) x.get(tableID);
+        return table;
+    }
+
+    /**c
+     * Helper-method for readCostumers that adds the information extracted from the rows in the table, into the Costumer-container.
+     * @param container
+     * @param row
+     */
+    private void createCostumerContainer(CustomerContainer container, HtmlTableRow row) {
+        HtmlTableCell gsm = row.getCell(gsmNrCol);
+        HtmlTableCell provision = row.getCell(provisionCol);
+        HtmlTableCell product = row.getCell(productCol);
+        HtmlTableCell ref = row.getCell(refCol);
+        HtmlTableCell name = row.getCell(nameCol);
+
+        container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
+                ref.asNormalizedText(), name.asNormalizedText(), type);
+    }
+
+    /**
      * Read file and create customer objects in container.
      *
      * Used for ACTUAl objects
@@ -149,24 +178,10 @@ public class HtmlFile extends ProvisionFile {
 
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
-            HtmlTableCell gsm = row.getCell(gsmNrCol);
-            HtmlTableCell provision = row.getCell(provisionCol);
-            HtmlTableCell product = row.getCell(productCol);
-            HtmlTableCell ref = row.getCell(refCol);
-            HtmlTableCell name = row.getCell(nameCol);
-
-            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
-                    ref.asNormalizedText(), name.asNormalizedText(), type);
+            createCostumerContainer(container, row);
         }
     }
 
-    public HtmlTable getTable() throws IOException {
-        WebClient client = new WebClient();
-        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
-        DomNodeList<DomElement> x = page.getElementsByTagName("table");
-        HtmlTable table = (HtmlTable) x.get(tableID);
-        return table;
-    }
     /**
      * Read file and create customer objects in container.
      *
@@ -178,21 +193,12 @@ public class HtmlFile extends ProvisionFile {
     public void readCustomers(CustomerContainer container, int expectedBrandCol) throws IOException {
         HtmlTable table = getTable();
 
-        //selve innlesingen av filen:
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
 
             if(row.getCell(brandCol).asNormalizedText() != valueOf(expectedBrandCol))
                 continue;
-
-            HtmlTableCell gsm = row.getCell(gsmNrCol);
-            HtmlTableCell provision = row.getCell(provisionCol);
-            HtmlTableCell product = row.getCell(productCol);
-            HtmlTableCell ref = row.getCell(refCol);
-            HtmlTableCell name = row.getCell(nameCol);
-
-            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
-                    ref.asNormalizedText(), name.asNormalizedText(), type);
+            createCostumerContainer(container, row);
         }
     }
 
