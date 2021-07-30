@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
 
 import static java.lang.String.valueOf;
 
@@ -73,9 +75,24 @@ public class HtmlFile extends ProvisionFile {
     }
 
     @Override
-    public String[][] showFile(int tableID) {
-        // NOT IMPLEMENTED
-        return new String[0][];
+    public String[][] showFile(int tableID) throws IOException {
+        WebClient client = new WebClient();
+        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
+        DomNodeList<DomElement> x = page.getElementsByTagName("table");
+        HtmlTable table = (HtmlTable) x.get(tableID);
+
+        ArrayList<String[]> fileRead = new ArrayList<>();
+
+        for (int i = startRow; i < table.getRowCount(); i++) {
+            HtmlTableRow row = table.getRow(i);
+            ArrayList<String> rowList = new ArrayList<>();
+            for (HtmlTableCell c : row.getCellIterator()) {
+                rowList.add(c.asNormalizedText());
+            }
+            fileRead.add(rowList.toArray(new String[0]));
+        }
+
+        return fileRead.toArray(new String[0][]);
     }
 
     /**
@@ -228,5 +245,13 @@ public class HtmlFile extends ProvisionFile {
     @Override
     public int getTableID() {
         return tableID;
+    }
+
+    @Override
+    public int tableCount() throws IOException {
+        WebClient client = new WebClient();
+        HtmlPage page = client.getPage("file:" + file.getAbsolutePath());
+        DomNodeList<DomElement> x = page.getElementsByTagName("table");
+        return x.size();
     }
 }
