@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -50,9 +51,23 @@ public class ExcelFile extends ProvisionFile {
     }
 
     @Override
-    public String[][] showFile() {
-        // NOT IMPLEMENTED
-        return new String[0][];
+    public String[][] showFile() throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        Workbook workbook = WorkbookFactory.create(fileInputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        ArrayList<String[]> fileRead = new ArrayList<>();
+
+        for (Row r : sheet) {
+            ArrayList<String> row = new ArrayList<>();
+            for (Cell c : r) {
+                c.setCellType(CellType.STRING);
+                row.add(c.toString());
+            }
+            fileRead.add(row.toArray(new String[0]));
+        }
+
+        return fileRead.toArray(new String[0][]);
     }
 
     @Override

@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class NewProfilePanel extends JPanel {
@@ -80,7 +81,11 @@ public class NewProfilePanel extends JPanel {
             int status = fileDial.showOpenDialog(this);
 
             if (status == JFileChooser.APPROVE_OPTION) {
-                newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
+                try {
+                    newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 for (JComponent jc : firstStep) {
                     jc.setVisible(false);
                 }
@@ -91,7 +96,7 @@ public class NewProfilePanel extends JPanel {
 
     }
 
-    public void newProfile(String name, File selectedFile, ProvisionFile.Type type) {
+    public void newProfile(String name, File selectedFile, ProvisionFile.Type type) throws IOException {
         ProvisionFile provisionFile;
         switch (FilenameUtils.getExtension(selectedFile.getAbsolutePath())) {
             case ("csv") -> provisionFile = new CsvFile(selectedFile, name, type);
@@ -206,6 +211,12 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
+            try {
+                provisionFile.saveProfile(name);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            controller.goToMainMenu();
         });
         continueButton.setFont(Main.DEFAULTFONT);
         c.gridx = 4;

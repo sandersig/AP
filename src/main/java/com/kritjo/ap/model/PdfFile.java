@@ -109,7 +109,7 @@ public class PdfFile extends ProvisionFile {
         String content = s.getText(document);
 
         List<String> lines = new ArrayList<>();
-        content.lines().forEach(str -> lines.add(str));
+        content.lines().forEach(lines::add);
 
         for(String line : lines){
             String[] arrSplit = line.split(" ");
@@ -129,7 +129,7 @@ public class PdfFile extends ProvisionFile {
             container.addCustomer(gsmConverted,provisionConverted,productConverted,refConverted,"",type);
         }
 
-
+        document.close();
 
     }
 
