@@ -192,7 +192,7 @@ class HtmlFileTest {
         ArrayList<Provision> provisions = (ArrayList<Provision>) f.get(cProvision);
 
         Provision prov1 = new Provision(1000F);
-        prov1.setProduct("Tele1");
+        prov1.setProduct("stntyv");
         prov1.setRef("1234");
 
         Provision prov2 = new Provision(500F);

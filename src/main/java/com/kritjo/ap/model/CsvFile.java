@@ -122,7 +122,7 @@ public class CsvFile extends ProvisionFile {
     }
 
     @Override
-    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
         Scanner sc = new Scanner(file);
         for (int i = 0; i < startRow; i++) sc.nextLine();
         while (sc.hasNextLine()) {

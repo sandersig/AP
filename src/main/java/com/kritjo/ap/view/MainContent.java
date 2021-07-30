@@ -51,4 +51,12 @@ public class MainContent extends JPanel {
     public void newProfilePanel(NewProfilePanel newProfilePanel) {
         add(newProfilePanel);
     }
+
+    public void ap(APPanel apPanel) {
+        add(apPanel);
+    }
+
+    public void apOptionsPanel(APOptionsPanel apOptionsPanel) {
+        add(apOptionsPanel);
+    }
 }
