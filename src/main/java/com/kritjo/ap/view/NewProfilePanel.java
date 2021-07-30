@@ -148,7 +148,6 @@ public class NewProfilePanel extends JPanel {
         add(colorInfo, c);
         c.gridwidth = 1;
 
-
         c.weightx = 0.5;
         c.gridy = 3;
         c.gridx = 0;

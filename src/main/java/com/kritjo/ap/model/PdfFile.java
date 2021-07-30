@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * File profile object for PDF files. Not implemented file reading yet.
