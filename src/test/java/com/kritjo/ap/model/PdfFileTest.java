@@ -38,6 +38,7 @@ class PdfFileTest {
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "pdf-0-3-2-1-0-4");
+        sc.close();
         assertTrue((new File("testing.prf")).delete());
     }
 

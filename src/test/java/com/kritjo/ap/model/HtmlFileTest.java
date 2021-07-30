@@ -39,6 +39,7 @@ class HtmlFileTest {
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "html-0-3-2-1-0-4-1");
+        sc.close();
         assertTrue((new File("testing.prf")).delete());
     }
 
