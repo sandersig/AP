@@ -187,10 +187,11 @@ public class HtmlFile extends ProvisionFile {
      *
      * Used for EXPECTED objects
      * @param container that customer objects should be written to
+     * @param payedByHK
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
     @Override
-    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
         HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {

@@ -187,7 +187,7 @@ public class ExcelFile extends ProvisionFile {
         }
     }
     @Override
-    public void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
         Iterator<Row> it = getTableIterator();
 
         for (int i = 0; i < startRow; i++)

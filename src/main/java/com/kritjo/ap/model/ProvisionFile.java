@@ -3,10 +3,7 @@ package com.kritjo.ap.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Abstract implementation of file profiles.
@@ -143,7 +140,7 @@ public abstract class ProvisionFile {
     public abstract int getBrandCol();
 
     public abstract void readCustomers(CustomerContainer container) throws IOException;
-    public abstract void readCustomers(CustomerContainer container, HashSet payedByHK, String expectedBrand) throws IOException;
+    public abstract void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException;
 
     public void setStartRow(int startRow) {
         throw new UnsupportedOperationException("Not supported for this filetype");
@@ -168,5 +165,21 @@ public abstract class ProvisionFile {
 
     public int tableCount() throws IOException {
         throw new UnsupportedOperationException("Not supported for this filetype");
+    }
+
+    public static String[] uniqueInCol(ProvisionFile provisionFile, int col) throws IOException {
+        String[][] fileRead = null;
+        try {
+            fileRead = provisionFile.showFile(provisionFile.getTableID());
+        } catch (UnsupportedOperationException ignore) {
+            fileRead = provisionFile.showFile(0);
+        }
+        HashSet<String> unique = new HashSet<>();
+
+        for (String[] row : fileRead) {
+            unique.add(row[col]);
+        }
+
+        return unique.toArray(new String[0]);
     }
 }
