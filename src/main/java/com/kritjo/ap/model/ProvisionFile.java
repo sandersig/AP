@@ -154,5 +154,5 @@ public abstract class ProvisionFile {
         ACTUAL
     }
 
-    public abstract String[][] showFile();
+    public abstract String[][] showFile() throws IOException;
 }

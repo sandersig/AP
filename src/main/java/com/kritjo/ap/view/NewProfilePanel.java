@@ -81,7 +81,11 @@ public class NewProfilePanel extends JPanel {
             int status = fileDial.showOpenDialog(this);
 
             if (status == JFileChooser.APPROVE_OPTION) {
-                newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
+                try {
+                    newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 for (JComponent jc : firstStep) {
                     jc.setVisible(false);
                 }
@@ -92,7 +96,7 @@ public class NewProfilePanel extends JPanel {
 
     }
 
-    public void newProfile(String name, File selectedFile, ProvisionFile.Type type) {
+    public void newProfile(String name, File selectedFile, ProvisionFile.Type type) throws IOException {
         ProvisionFile provisionFile;
         switch (FilenameUtils.getExtension(selectedFile.getAbsolutePath())) {
             case ("csv") -> provisionFile = new CsvFile(selectedFile, name, type);
