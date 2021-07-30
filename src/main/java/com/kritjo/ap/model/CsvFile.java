@@ -129,7 +129,7 @@ public class CsvFile extends ProvisionFile {
             String[] line = sc.nextLine().split(delim);
 
             if(!payedByHK.isEmpty()){
-                if(payedByHK.contains(line[provisionCol]))
+                if(payedByHK.contains(line[productCol]))
                     continue;
             }
             if (line[brandCol].equals(expectedBrand)) {

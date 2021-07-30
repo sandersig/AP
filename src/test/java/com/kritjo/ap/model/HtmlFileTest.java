@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -215,5 +216,14 @@ class HtmlFileTest {
         prov3.setProduct("Tele2");
 
         assertTrue(new ReflectionEquals(prov3, "").matches(provisions.get(0)));
+    }
+
+    @Test
+    void rowsIncludingCodesThatIsPayedByHKGetsSkippedByReadCostumer(){
+        HashSet<String> HKCodes = new HashSet<String>();
+        HKCodes.add("stntyv");
+        HKCodes.add("swappluss");
+        
+
     }
 }

@@ -199,7 +199,7 @@ public class HtmlFile extends ProvisionFile {
             if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
                 continue;
             if(!payedByHK.isEmpty()){
-                if(payedByHK.contains(row.getCell(provisionCol)))
+                if(payedByHK.contains(row.getCell(productCol)))
                     continue;
             }
                 createCostumerContainer(container, row);

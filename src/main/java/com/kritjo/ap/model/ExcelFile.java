@@ -203,7 +203,10 @@ public class ExcelFile extends ProvisionFile {
             if (!brandConverted.equals(expectedBrand))
                 continue;
             if(!payedByHK.isEmpty()){
-                if(payedByHK.contains(row.getCell(productCol)))
+                Cell product = row.getCell(productCol);
+                product.setCellType(CellType.STRING);
+                String productConverted = product.toString();
+                if(payedByHK.contains(productConverted))
                     continue;
             }
             createCostumerContainer(container, row);
