@@ -155,4 +155,8 @@ public abstract class ProvisionFile {
     }
 
     public abstract String[][] showFile(int tableID) throws IOException;
+
+    public int tableCount() throws IOException {
+        throw new UnsupportedOperationException("Not supported for this filetype");
+    }
 }

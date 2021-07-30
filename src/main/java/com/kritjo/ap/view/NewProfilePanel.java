@@ -11,6 +11,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NewProfilePanel extends JPanel {
     private final Controller controller;
@@ -105,89 +107,102 @@ public class NewProfilePanel extends JPanel {
             case ("html") -> provisionFile = new HtmlFile(selectedFile, name, type);
             default -> throw new IllegalStateException("Unexpected filetype: " + FilenameUtils.getExtension(selectedFile.getAbsolutePath()));
         }
-        c.gridy = 1;
         c.gridx = 0;
-        c.gridwidth = 5;
+        c.gridwidth = 1;
+
+        AtomicInteger tableID = new AtomicInteger();
+
+        String[][][] fileRead = {provisionFile.showFile(tableID.get())};
+        HashMap<String, Integer> headers = new HashMap<>();
+
+        while (fileRead[0].length == 0) {
+            if (tableID.get() < provisionFile.tableCount()) {
+                tableID.getAndIncrement();
+            } else {
+                throw new IllegalStateException("No tables with data");
+            }
+            fileRead = new String[][][]{provisionFile.showFile(tableID.get())};
+        }
+
+        AtomicReference<Character> ch = new AtomicReference<>('A');
+        for (int i = 0; i < fileRead[0][0].length; i++) {
+            headers.put(String.valueOf(ch.get()), i);
+            ch.set((char) (ch.get() + 1));
+        }
+
+        AtomicReference<JTable> table = new AtomicReference<>(new JTable(fileRead[0], headers.keySet().toArray(new String[0])));
+        table.get().setFont(Main.DEFAULTFONT);
+
+        JScrollPane container = new JScrollPane(table.get());
+
+
+        c.gridy = 2;
         JLabel colorInfo = new JLabel("Velg en kolonne for hver av følgende egenskaper:");
         colorInfo.setFont(Main.DEFAULTFONT);
         add(colorInfo, c);
         c.gridwidth = 1;
 
-        int tableID = 0;
-
-        String[][] fileRead = provisionFile.showFile(0);
-        HashMap<String, Integer> headers = new HashMap<>();
-
-        char ch = 'A';
-        for (int i = 0; i < fileRead[0].length; i++) {
-            headers.put(String.valueOf(ch), i);
-            ch++;
-        }
 
         c.weightx = 0.5;
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridx = 0;
         JLabel gsmColInfo = new JLabel("Telefonnummer");
         gsmColInfo.setFont(Main.DEFAULTFONT);
         add(gsmColInfo, c);
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridx = 0;
         JComboBox<String> gsmCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         gsmCol.setFont(Main.DEFAULTFONT);
         add(gsmCol, c);
 
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridx = 1;
         JLabel provColInfo = new JLabel("Provision");
         provColInfo.setFont(Main.DEFAULTFONT);
         add(provColInfo, c);
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridx = 1;
         JComboBox<String> provCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         provCol.setFont(Main.DEFAULTFONT);
         add(provCol, c);
 
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridx = 2;
         JLabel refColInfo = new JLabel("Referanse");
         refColInfo.setFont(Main.DEFAULTFONT);
         add(refColInfo, c);
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridx = 2;
         JComboBox<String> refCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         refCol.setFont(Main.DEFAULTFONT);
         add(refCol, c);
 
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridx = 3;
         JLabel nameColInfo = new JLabel("Kundens navn");
         nameColInfo.setFont(Main.DEFAULTFONT);
         add(nameColInfo, c);
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridx = 3;
         JComboBox<String> nameCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         nameCol.setFont(Main.DEFAULTFONT);
         add(nameCol, c);
 
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridx = 4;
         JLabel productColInfo = new JLabel("Produkt/Årsak");
         productColInfo.setFont(Main.DEFAULTFONT);
         add(productColInfo, c);
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridx = 4;
         JComboBox<String> productCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
         productCol.setFont(Main.DEFAULTFONT);
         add(productCol, c);
 
-        JTable table = new JTable(fileRead, headers.keySet().toArray(new String[0]));
-        table.setFont(Main.DEFAULTFONT);
-
-        JScrollPane container = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-        table.setEnabled(false);
+        table.get().setFillsViewportHeight(true);
+        table.get().setEnabled(false);
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 6;
         c.weightx = 5;
         c.gridwidth = 5;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -195,12 +210,12 @@ public class NewProfilePanel extends JPanel {
 
         JLabel rowInfo = new JLabel("Hvilken rad inneholder første datapunkt(er)?");
         c.gridx = 0;
-        c.gridy = 6;
+        c.gridy = 7;
         c.weightx = 0.0;
         c.fill = GridBagConstraints.NONE;
         add(rowInfo, c);
 
-        SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1, 0, fileRead.length, 1);
+        SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1, 0, fileRead[0].length, 1);
         JSpinner row = new JSpinner(spinnerNumberModel);
         c.gridx = 1;
         add(row, c);
@@ -213,6 +228,9 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
+            if (tableID.get() != 0) {
+                provisionFile.setTableID(tableID.get());
+            }
             try {
                 provisionFile.saveProfile(name);
             } catch (IOException e) {
@@ -223,6 +241,85 @@ public class NewProfilePanel extends JPanel {
         continueButton.setFont(Main.DEFAULTFONT);
         c.gridx = 4;
         add(continueButton, c);
+
+        if (FilenameUtils.getExtension(selectedFile.getAbsolutePath()).equals("html") ||
+                FilenameUtils.getExtension(selectedFile.getAbsolutePath()).equals("pdf")) {
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            JButton prev = new JButton("<-");
+            prev.setFont(Main.DEFAULTFONT);
+            String[][][] finalFileRead = fileRead;
+            prev.addActionListener(actionEvent -> {
+                if (tableID.get() > 0) {
+                    tableID.getAndDecrement();
+
+                    updateTable(provisionFile, tableID, finalFileRead, headers, ch, table, container, nameCol, refCol,
+                            provCol, gsmCol, productCol, spinnerNumberModel);
+                }
+            });
+            add(prev, c);
+
+            c.gridx = 2;
+            JLabel tableInfo = new JLabel("Velg annen tabell");
+            tableInfo.setFont(Main.DEFAULTFONT);
+            add(tableInfo, c);
+
+            c.gridx = 3;
+            JButton next = new JButton("->");
+            next.setFont(Main.DEFAULTFONT);
+            String[][][] finalFileRead1 = fileRead;
+            next.addActionListener(actionEvent -> {
+                try {
+                    if (tableID.get() < provisionFile.tableCount()) {
+                        tableID.getAndIncrement();
+
+                        updateTable(provisionFile, tableID, finalFileRead1, headers, ch, table, container, nameCol, refCol,
+                                provCol, gsmCol, productCol, spinnerNumberModel);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            add(next, c);
+        }
+    }
+
+    private void updateTable(ProvisionFile provisionFile, AtomicInteger tableID, String[][][] fileRead, HashMap<String, Integer> headers, AtomicReference<Character> ch, AtomicReference<JTable> table, JScrollPane container, JComboBox<String> nameCol, JComboBox<String> refCol, JComboBox<String> provCol, JComboBox<String> gsmCol, JComboBox<String> productCol, SpinnerNumberModel spinnerNumberModel) {
+        try {
+            fileRead[0] = provisionFile.showFile(tableID.get());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        headers.clear();
+
+        ch.set('A');
+        for (int i = 0; i < fileRead[0][0].length; i++) {
+            headers.put(String.valueOf(ch.get()), i);
+            ch.set((char) (ch.get() + 1));
+        }
+
+        table.set(new JTable(fileRead[0], headers.keySet().toArray(new String[0])));
+        table.get().setVisible(true);
+        container.setViewportView(table.get());
+
+        updateComboBox(nameCol, headers);
+        updateComboBox(productCol, headers);
+        updateComboBox(gsmCol, headers);
+        updateComboBox(refCol, headers);
+        updateComboBox(provCol, headers);
+
+        spinnerNumberModel.setValue(1);
+        spinnerNumberModel.setMaximum(fileRead[0].length);
+    }
+
+    private void updateComboBox(JComboBox<String> comboBox, HashMap<String, Integer> headers) {
+        comboBox.removeAllItems();
+        for (String s : headers.keySet()) {
+            comboBox.addItem(s);
+        }
     }
 
 }
