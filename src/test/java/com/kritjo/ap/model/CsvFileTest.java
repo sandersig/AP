@@ -38,7 +38,7 @@ class CsvFileTest {
         csvFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "csv-;-0-1-3-2-4-1");
+        assertEquals(s, "csv_;_0_1_3_2_4_1_-1");
         assertTrue((new File("testing.prf")).delete());
     }
 

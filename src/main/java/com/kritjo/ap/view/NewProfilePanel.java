@@ -204,12 +204,28 @@ public class NewProfilePanel extends JPanel {
         productCol.setFont(Main.DEFAULTFONT);
         add(productCol, c);
 
+        JLabel brandColInfo; JComboBox<String> brandCol = null;
+
+        if (type == ProvisionFile.Type.EXPECTED) {
+            c.gridy = 3;
+            c.gridx = 5;
+            brandColInfo = new JLabel("Merke/PIM brandID");
+            brandColInfo.setFont(Main.DEFAULTFONT);
+            add(brandColInfo, c);
+            c.gridy = 4;
+            c.gridx = 5;
+            brandCol = new JComboBox<>(headers.keySet().toArray(new String[0]));
+            brandCol.setFont(Main.DEFAULTFONT);
+            add(brandCol, c);
+        }
+
         table.get().setFillsViewportHeight(true);
         table.get().setEnabled(false);
         c.gridx = 0;
         c.gridy = 6;
         c.weightx = 5;
-        c.gridwidth = 5;
+        if (type == ProvisionFile.Type.EXPECTED) c.gridwidth = 6;
+        else c.gridwidth = 5;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(container, c);
 
@@ -227,6 +243,7 @@ public class NewProfilePanel extends JPanel {
 
         // Save profile to file after parameters is set.
         JButton continueButton = new JButton("Fortsett");
+        JComboBox<String> finalBrandCol2 = brandCol;
         continueButton.addActionListener(actionEvent -> {
             provisionFile.setProvisionCol(headers.get((String) provCol.getSelectedItem()));
             provisionFile.setProductCol(headers.get((String) productCol.getSelectedItem()));
@@ -234,6 +251,7 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
+            if (finalBrandCol2 != null) provisionFile.setBrandCol(headers.get((String) finalBrandCol2.getSelectedItem()));
             if (tableID.get() != 0) {
                 provisionFile.setTableID(tableID.get());
             }
@@ -257,12 +275,13 @@ public class NewProfilePanel extends JPanel {
             JButton prev = new JButton("<-");
             prev.setFont(Main.DEFAULTFONT);
             String[][][] finalFileRead = fileRead;
+            JComboBox<String> finalBrandCol = brandCol;
             prev.addActionListener(actionEvent -> {
                 if (tableID.get() > 0) {
                     tableID.getAndDecrement();
 
                     updateTable(provisionFile, tableID, finalFileRead, headers, ch, table, container, nameCol, refCol,
-                            provCol, gsmCol, productCol, spinnerNumberModel);
+                            provCol, gsmCol, productCol, spinnerNumberModel, finalBrandCol);
                 }
             });
             add(prev, c);
@@ -276,13 +295,14 @@ public class NewProfilePanel extends JPanel {
             JButton next = new JButton("->");
             next.setFont(Main.DEFAULTFONT);
             String[][][] finalFileRead1 = fileRead;
+            JComboBox<String> finalBrandCol1 = brandCol;
             next.addActionListener(actionEvent -> {
                 try {
                     if (tableID.get() < provisionFile.tableCount()) {
                         tableID.getAndIncrement();
 
                         updateTable(provisionFile, tableID, finalFileRead1, headers, ch, table, container, nameCol, refCol,
-                                provCol, gsmCol, productCol, spinnerNumberModel);
+                                provCol, gsmCol, productCol, spinnerNumberModel, finalBrandCol1);
 
                     }
                 } catch (IOException e) {
@@ -293,7 +313,7 @@ public class NewProfilePanel extends JPanel {
         }
     }
 
-    private void updateTable(ProvisionFile provisionFile, AtomicInteger tableID, String[][][] fileRead, HashMap<String, Integer> headers, AtomicReference<Character> ch, AtomicReference<JTable> table, JScrollPane container, JComboBox<String> nameCol, JComboBox<String> refCol, JComboBox<String> provCol, JComboBox<String> gsmCol, JComboBox<String> productCol, SpinnerNumberModel spinnerNumberModel) {
+    private void updateTable(ProvisionFile provisionFile, AtomicInteger tableID, String[][][] fileRead, HashMap<String, Integer> headers, AtomicReference<Character> ch, AtomicReference<JTable> table, JScrollPane container, JComboBox<String> nameCol, JComboBox<String> refCol, JComboBox<String> provCol, JComboBox<String> gsmCol, JComboBox<String> productCol, SpinnerNumberModel spinnerNumberModel, JComboBox<String> brandCol) {
         try {
             fileRead[0] = provisionFile.showFile(tableID.get());
         } catch (IOException e) {
@@ -312,7 +332,7 @@ public class NewProfilePanel extends JPanel {
         table.get().setVisible(true);
         container.setViewportView(table.get());
 
-        for (JComboBox<String> comboBox : Arrays.asList(nameCol, productCol, gsmCol, refCol, provCol)) {
+        for (JComboBox<String> comboBox : Arrays.asList(nameCol, productCol, gsmCol, refCol, provCol, brandCol)) {
             updateComboBox(comboBox, headers);
         }
 
@@ -321,9 +341,11 @@ public class NewProfilePanel extends JPanel {
     }
 
     private void updateComboBox(JComboBox<String> comboBox, HashMap<String, Integer> headers) {
-        comboBox.removeAllItems();
-        for (String s : headers.keySet()) {
-            comboBox.addItem(s);
+        if (comboBox != null) {
+            comboBox.removeAllItems();
+            for (String s : headers.keySet()) {
+                comboBox.addItem(s);
+            }
         }
     }
 

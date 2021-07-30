@@ -14,7 +14,7 @@ public abstract class ProvisionFile {
     /**
      * Constant that specifies the delimiter used in saved profiles.
      */
-    public static final String PROFILE_DELIM = "-";
+    public static final String PROFILE_DELIM = "_";
     /**
      * Actual file that should use the profile.
      */
@@ -58,6 +58,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
+                provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
             }
             case "html" -> {
                 provisionFileFromProfile = new HtmlFile(provisionFile, name, Type.ACTUAL);
@@ -68,6 +69,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
+                provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
             }
             case "pdf" -> {
                 provisionFileFromProfile = new PdfFile(provisionFile, name, Type.ACTUAL);
@@ -77,6 +79,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setRefCol(Integer.parseInt(profile[4]));
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
+                provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
             }
             case "excel" -> {
                 provisionFileFromProfile = new ExcelFile(provisionFile, name, Type.ACTUAL);
@@ -86,6 +89,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[4]));
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[6]));
+                provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
             }
             default -> throw new IllegalArgumentException("Provided profile has wrong formating.");
         }

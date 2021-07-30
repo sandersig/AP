@@ -82,10 +82,11 @@ public class PdfFile extends ProvisionFile {
     public void saveProfile(String name) throws IOException {
         if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
             throw new IllegalStateException("Set columns first");
+        if (type == Type.EXPECTED && brandCol == -1) throw new IllegalStateException("Set columns first");
         File profile = new File(name+".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("pdf" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol);
+            fileWriter.write("pdf" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + brandCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
