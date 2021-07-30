@@ -114,6 +114,7 @@ public class PdfFile extends ProvisionFile {
         for(String line : lines){
             String[] arrSplit = line.split(" ");
 
+            //TODO: Replace the constants by variables
             if(arrSplit[2].matches("[a-zA-Z]+"))
                 continue;
 
@@ -121,6 +122,7 @@ public class PdfFile extends ProvisionFile {
             String productConverted = arrSplit[1];
             float provisionConverted = Float.parseFloat(arrSplit[2]);
             String refConverted = arrSplit[3];
+            //TODO: Add support for more rows if necessary
 
             System.out.print("gsm: " + gsmConverted + " product: "+ productConverted + " provisionconverted: "+ provisionConverted + " ref: "+ refConverted + "\n");
 
