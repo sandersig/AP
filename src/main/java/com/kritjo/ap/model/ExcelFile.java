@@ -127,6 +127,11 @@ public class ExcelFile extends ProvisionFile {
         return brandCol;
     }
 
+    /**
+     * Helper-method to readCostumers for retrieving an iterator for the Excel-tables.
+     * @return An iterator
+     * @throws IOException
+     */
     private Iterator<Row> getTableIterator() throws IOException {
         FileInputStream fileInputStream = new FileInputStream(file);
         Workbook workbook = WorkbookFactory.create(fileInputStream);
@@ -136,6 +141,11 @@ public class ExcelFile extends ProvisionFile {
         return it;
     }
 
+    /**
+     * Helper-method for readCostumers that adds the information extracted from the rows in the table, into the Costumer-container.
+     * @param container
+     * @param row
+     */
     private void createCostumerContainer(CustomerContainer container, Row row){
         Cell gsm = row.getCell(gsmNrCol);
         gsm.setCellType(CellType.STRING);

@@ -105,7 +105,6 @@ public class CsvFile extends ProvisionFile {
         return brandCol;
     }
 
-
     /**
      * Read file and create customer objects in container.
      *
