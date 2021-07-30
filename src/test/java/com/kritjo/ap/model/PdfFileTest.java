@@ -18,7 +18,7 @@ class PdfFileTest {
 
     @BeforeEach
     void reset() {
-        pdfFile = new PdfFile(new File("Telenor Stavanger 1.pdf"), "pdfFile", ProvisionFile.Type.ACTUAL);
+        pdfFile = new PdfFile(new File("example.pdf"), "pdfFile", ProvisionFile.Type.ACTUAL);
     }
 
     @Test
