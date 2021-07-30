@@ -39,6 +39,7 @@ class ExcelFileTest {
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
         assertEquals(s, "excel_3_2_1_0_4_1_-1");
+        sc.close();
         assertTrue((new File("testing.prf")).delete());
     }
 
