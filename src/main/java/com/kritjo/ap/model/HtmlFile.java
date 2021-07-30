@@ -195,7 +195,7 @@ public class HtmlFile extends ProvisionFile {
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
 
-            if(row.getCell(brandCol).asNormalizedText() != valueOf(expectedBrandCol))
+            if(!row.getCell(brandCol).asNormalizedText().equals(valueOf(expectedBrandCol)))
                 continue;
             createCostumerContainer(container, row);
         }
