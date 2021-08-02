@@ -14,7 +14,7 @@ class ProvisionFileTest {
     @Test
     void getFileFromProfile() throws FileNotFoundException {
         try {
-            ProvisionFile.getFileFromProfile("doesNotExist", new File("example.csv"), "CsvTest");
+            ProvisionFile.getFileFromProfile("doesNotExist", new File("example.csv"), "CsvTest", ProvisionFile.Type.ACTUAL);
             assert false;
         } catch (FileNotFoundException ignore) {
         }
@@ -26,7 +26,7 @@ class ProvisionFileTest {
         csvFile.setProvisionCol(2);
         csvFile.setNameCol(4);
 
-        CsvFile csvFileFromProfile = (CsvFile) ProvisionFile.getFileFromProfile("csvprofile", new File("example.csv"), "CsvFile");
+        CsvFile csvFileFromProfile = (CsvFile) ProvisionFile.getFileFromProfile("csvprofile", new File("example.csv"), "CsvFile", ProvisionFile.Type.ACTUAL);
 
         assertTrue(new ReflectionEquals(csvFile, "").matches(csvFileFromProfile));
 
@@ -37,7 +37,7 @@ class ProvisionFileTest {
         excelFile.setProvisionCol(0);
         excelFile.setNameCol(4);
 
-        ExcelFile excelFileFromProfile = (ExcelFile) ProvisionFile.getFileFromProfile("excelprofile", new File("example.xls"), "ExcelFile");
+        ExcelFile excelFileFromProfile = (ExcelFile) ProvisionFile.getFileFromProfile("excelprofile", new File("example.xls"), "ExcelFile", ProvisionFile.Type.ACTUAL);
 
         assertTrue(new ReflectionEquals(excelFile, "").matches(excelFileFromProfile));
 
@@ -49,7 +49,7 @@ class ProvisionFileTest {
         htmlFile.setProvisionCol(0);
         htmlFile.setNameCol(4);
 
-        HtmlFile htmlFileFromProfile = (HtmlFile) ProvisionFile.getFileFromProfile("htmlprofile", new File("example.html"), "HtmlFile");
+        HtmlFile htmlFileFromProfile = (HtmlFile) ProvisionFile.getFileFromProfile("htmlprofile", new File("example.html"), "HtmlFile", ProvisionFile.Type.ACTUAL);
 
         assertTrue(new ReflectionEquals(htmlFile, "").matches(htmlFileFromProfile));
 
@@ -61,12 +61,12 @@ class ProvisionFileTest {
         pdfFile.setProvisionCol(0);
         pdfFile.setNameCol(4);
 
-        PdfFile pdfFileFromProfile = (PdfFile) ProvisionFile.getFileFromProfile("pdfprofile", new File("example.pdf"), "PdfFile");
+        PdfFile pdfFileFromProfile = (PdfFile) ProvisionFile.getFileFromProfile("pdfprofile", new File("example.pdf"), "PdfFile", ProvisionFile.Type.ACTUAL);
 
         assertTrue(new ReflectionEquals(pdfFile, "").matches(pdfFileFromProfile));
 
         try {
-            ProvisionFile.getFileFromProfile("illegalprofile", new File("doesNotExist"), "IllegalProfile");
+            ProvisionFile.getFileFromProfile("illegalprofile", new File("doesNotExist"), "IllegalProfile", ProvisionFile.Type.ACTUAL);
             assert false;
         } catch (IllegalArgumentException ignore) {
         }

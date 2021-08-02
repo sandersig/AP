@@ -41,7 +41,7 @@ public class FilePanel extends JPanel {
                         JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
             try {
-                controller.addFile(ProvisionFile.getFileFromProfile(profileName, file, profileName), type);
+                controller.addFile(ProvisionFile.getFileFromProfile(profileName, file, profileName, type), type);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

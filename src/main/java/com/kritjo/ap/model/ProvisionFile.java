@@ -39,7 +39,7 @@ public abstract class ProvisionFile {
      * @return a ProvisionFile of the actual subclass type.
      * @throws FileNotFoundException If no profile with the provided name has been found.
      */
-    public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name) throws FileNotFoundException {
+    public static ProvisionFile getFileFromProfile(String profileName, File provisionFile, String name, Type type) throws FileNotFoundException {
         File file = new File(profileName + ".prf");
         Scanner sc = new Scanner(file);
         String line = sc.nextLine();
@@ -48,7 +48,7 @@ public abstract class ProvisionFile {
         ProvisionFile provisionFileFromProfile;
         switch (profile[0]) {
             case "csv" -> {
-                provisionFileFromProfile = new CsvFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile = new CsvFile(provisionFile, name, type);
                 provisionFileFromProfile.setDelim(profile[1]);
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
@@ -59,7 +59,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
             }
             case "html" -> {
-                provisionFileFromProfile = new HtmlFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile = new HtmlFile(provisionFile, name, type);
                 provisionFileFromProfile.setTableID(Integer.parseInt(profile[1]));
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
@@ -70,7 +70,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
             }
             case "pdf" -> {
-                provisionFileFromProfile = new PdfFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile = new PdfFile(provisionFile, name, type);
                 provisionFileFromProfile.setTableID(Integer.parseInt(profile[1]));
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[3]));
@@ -80,7 +80,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
             }
             case "excel" -> {
-                provisionFileFromProfile = new ExcelFile(provisionFile, name, Type.ACTUAL);
+                provisionFileFromProfile = new ExcelFile(provisionFile, name, type);
                 provisionFileFromProfile.setGsmNrCol(Integer.parseInt(profile[1]));
                 provisionFileFromProfile.setProductCol(Integer.parseInt(profile[2]));
                 provisionFileFromProfile.setRefCol(Integer.parseInt(profile[3]));
@@ -168,7 +168,7 @@ public abstract class ProvisionFile {
     }
 
     public static String[] uniqueInCol(ProvisionFile provisionFile, int col) throws IOException {
-        String[][] fileRead = null;
+        String[][] fileRead;
         try {
             fileRead = provisionFile.showFile(provisionFile.getTableID());
         } catch (UnsupportedOperationException ignore) {
