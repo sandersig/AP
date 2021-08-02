@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * File profile object for csv files.
@@ -113,27 +112,48 @@ public class CsvFile extends ProvisionFile {
      */
     @Override
     public void readCustomers(CustomerContainer container) throws FileNotFoundException {
-        Scanner sc = new Scanner(file);
-        for (int i = 0; i < startRow; i++) sc.nextLine();
-        while (sc.hasNextLine()) {
-            String[] line = sc.nextLine().split(delim);
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.detectFormatAutomatically();
+        CsvParser parser = new CsvParser(settings);
+        List<String[]> rows = parser.parseAll(file);
+
+        if (startRow > 0) {
+            rows.subList(0, startRow).clear();
+        }
+
+        for (String[] line : rows) {
             container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
         }
     }
 
     @Override
     public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
-        Scanner sc = new Scanner(file);
-        for (int i = 0; i < startRow; i++) sc.nextLine();
-        while (sc.hasNextLine()) {
-            String[] line = sc.nextLine().split(delim);
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.detectFormatAutomatically();
+        CsvParser parser = new CsvParser(settings);
+        List<String[]> rows = parser.parseAll(file);
 
+        if (startRow > 0) {
+            rows.subList(0, startRow).clear();
+        }
+
+        for (String[] line : rows) {
             if(!payedByHK.isEmpty()){
                 if(payedByHK.contains(line[productCol]))
                     continue;
             }
+            for (int i = 0; i < line.length; i++) {
+                if (line[i] == null) {
+                    line[i] = "";
+                }
+            }
+
             if (line[brandCol].equals(expectedBrand)) {
-                container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
+                /* TODO: Different decimal types per profile so that we actually read the decimalpoints. Now we assume
+                    that no files use ,|. for thousands separator, and that no files have decimal values. This is not
+                    accurate
+                 */
+                container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( |-|,\\d+$|\\.\\d+$)", "")), line[productCol], line[refCol], line[nameCol], type);
             }
         }
     }
