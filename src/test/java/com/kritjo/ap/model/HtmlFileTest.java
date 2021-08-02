@@ -233,8 +233,8 @@ class HtmlFileTest {
         htmlFileWithHKCodes.setRefCol(3);
         htmlFileWithHKCodes.setNameCol(4);
         htmlFileWithHKCodes.setTableID(0);
-       // htmlFileWithHKCodes.setBrandCol(10); //test value
-        htmlFileWithHKCodes.readCustomers(container, HKCodes, "033");
+        htmlFileWithHKCodes.setBrandCol(5); //test value
+        htmlFileWithHKCodes.readCustomers(container, HKCodes, "10");
 
         assertEquals(3, container.getContainerSize());
     }

@@ -83,7 +83,7 @@ public class HtmlFile extends ProvisionFile {
 
         ArrayList<String[]> fileRead = new ArrayList<>();
 
-        for (int i = startRow; i < table.getRowCount(); i++) {
+        for (int i = 0; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
             ArrayList<String> rowList = new ArrayList<>();
             for (HtmlTableCell c : row.getCellIterator()) {
@@ -106,7 +106,6 @@ public class HtmlFile extends ProvisionFile {
     public void saveProfile(String name) throws IOException {
         if (tableID == -1 || gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1 || (brandCol == -1 && type == Type.EXPECTED))
             throw new IllegalStateException("Set columns first");
-        if (type == Type.EXPECTED && brandCol == -1) throw new IllegalStateException("Set columns first");
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
@@ -155,14 +154,23 @@ public class HtmlFile extends ProvisionFile {
      * @param row
      */
     private void createCostumerContainer(CustomerContainer container, HtmlTableRow row) {
-        HtmlTableCell gsm = row.getCell(gsmNrCol);
-        HtmlTableCell provision = row.getCell(provisionCol);
-        HtmlTableCell product = row.getCell(productCol);
-        HtmlTableCell ref = row.getCell(refCol);
-        HtmlTableCell name = row.getCell(nameCol);
+        try {
+            HtmlTableCell gsm = row.getCell(gsmNrCol);
+            HtmlTableCell provision = row.getCell(provisionCol);
+            HtmlTableCell product = row.getCell(productCol);
+            HtmlTableCell ref = row.getCell(refCol);
+            HtmlTableCell name = row.getCell(nameCol);
 
-        container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText()), product.asNormalizedText(),
-                ref.asNormalizedText(), name.asNormalizedText(), type);
+            /* TODO: Different decimal types per profile so that we actually read the decimalpoints. Now we assume
+                    that no files use ,|. for thousands separator, and that no files have decimal values. This is not
+                    accurate
+            */
+            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText().replaceAll("( |-|,.+$)", "")), product.asNormalizedText(),
+                    ref.asNormalizedText(), name.asNormalizedText(), type);
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Could not add customer" + row.asNormalizedText());
+        }
+
     }
 
     /**
@@ -197,8 +205,7 @@ public class HtmlFile extends ProvisionFile {
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
 
-            //if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand))
-              //  continue;
+            if(!row.getCell(brandCol).asNormalizedText().equals(expectedBrand)) continue;
 
             if(!payedByHK.isEmpty()){
                 if(payedByHK.contains(row.getCell(productCol).asNormalizedText()))
