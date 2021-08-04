@@ -149,6 +149,25 @@ public class CsvFile extends ProvisionFile {
                 }
             }
 
+            //Går nok hella slow, men får testa
+            if(line[gsmNrCol].isBlank()){
+                String currentCustomer = line[nameCol];
+                Integer numberOfGSMPerCustomer = 0;
+                String currentGSM = null;
+                for (String[] line1 : rows){
+                    if(line1[nameCol].equals(currentCustomer) && !line1[gsmNrCol].isBlank() && line1[brandCol].equals(expectedBrand)){
+                        currentGSM = line[gsmNrCol];
+                        numberOfGSMPerCustomer++;
+                    }
+                }
+                if(numberOfGSMPerCustomer == 1)
+                    container.addCustomer(currentGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                else{
+                    //TODO: Add to avviksliste for manual check
+                }
+
+            }
+
             if (line[brandCol].equals(expectedBrand)) {
                 container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
             }
