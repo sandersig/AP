@@ -35,10 +35,11 @@ class CsvFileTest {
         csvFile.setGsmNrCol(0);
         csvFile.setProvisionCol(2);
         csvFile.setNameCol(4);
+        csvFile.setDecimalSep(',');
         csvFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "csv_;_0_1_3_2_4_1_-1");
+        assertEquals(s, "csv_;_0_1_3_2_4_1_-1_,");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }

@@ -34,10 +34,11 @@ class PdfFileTest {
         pdfFile.setGsmNrCol(3);
         pdfFile.setProvisionCol(0);
         pdfFile.setNameCol(4);
+        pdfFile.setDecimalSep(',');
         pdfFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "pdf_0_3_2_1_0_4_-1");
+        assertEquals(s, "pdf_0_3_2_1_0_4_-1_,");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }

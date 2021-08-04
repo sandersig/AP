@@ -7,9 +7,14 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultFormatterFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -229,11 +234,43 @@ public class NewProfilePanel extends JPanel {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(container, c);
 
+        c.weightx = 0.0;
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 8;
+        JLabel decimalSepInfo = new JLabel("Desimalseparator (f.eks. ','/'.')");
+        decimalSepInfo.setFont(Main.DEFAULTFONT);
+        add(decimalSepInfo, c);
+
+
+        JFormattedTextField.AbstractFormatter decimalFormat = new JFormattedTextField.AbstractFormatter() {
+            @Override
+            public Object stringToValue(String s) throws ParseException {
+                if (s.length() == 1) {
+                    return s.charAt(0);
+                } else if (s.length() == 0) {
+                    return Character.MIN_VALUE;
+                } else this.invalidEdit();
+                return null;
+            }
+
+            @Override
+            public String valueToString(Object o) throws ParseException {
+                if (o == null) {
+                    return "";
+                } else return o.toString();
+            }
+        };
+
+        JFormattedTextField decimalSep = new JFormattedTextField(decimalFormat);
+        decimalSep.setValue(',');
+        decimalSep.setFont(Main.DEFAULTFONT);
+        c.gridx = 1;
+        add(decimalSep, c);
+
         JLabel rowInfo = new JLabel("Hvilken rad inneholder første datapunkt(er)?");
         c.gridx = 0;
         c.gridy = 7;
-        c.weightx = 0.0;
-        c.fill = GridBagConstraints.NONE;
         add(rowInfo, c);
 
         SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1, 0, fileRead[0].length, 1);
@@ -251,6 +288,7 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setNameCol(headers.get((String) nameCol.getSelectedItem()));
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
+            provisionFile.setDecimalSep((char) decimalSep.getValue());
             if (finalBrandCol2 != null) provisionFile.setBrandCol(headers.get((String) finalBrandCol2.getSelectedItem()));
             if (tableID.get() != 0) {
                 provisionFile.setTableID(tableID.get());

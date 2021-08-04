@@ -35,10 +35,11 @@ class ExcelFileTest {
         excelFile.setGsmNrCol(3);
         excelFile.setProvisionCol(0);
         excelFile.setNameCol(4);
+        excelFile.setDecimalSep(',');
         excelFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "excel_3_2_1_0_4_1_-1");
+        assertEquals(s, "excel_3_2_1_0_4_1_-1_,");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }

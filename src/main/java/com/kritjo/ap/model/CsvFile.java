@@ -73,11 +73,12 @@ public class CsvFile extends ProvisionFile {
     public void saveProfile(String name) throws IOException {
         if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
             throw new IllegalStateException("Set columns first");
+        if (decimalSep == Character.MIN_VALUE) throw new IllegalStateException("Set decimal separator");
         if (type == Type.EXPECTED && brandCol == -1) throw new IllegalStateException("Set columns first");
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("csv" + PROFILE_DELIM + delim + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol);
+            fileWriter.write("csv" + PROFILE_DELIM + delim + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -122,7 +123,7 @@ public class CsvFile extends ProvisionFile {
         }
 
         for (String[] line : rows) {
-            container.addCustomer(line[gsmNrCol], Float.parseFloat(line[provisionCol]), line[productCol], line[refCol], line[nameCol], type);
+            container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
         }
     }
 
@@ -149,11 +150,7 @@ public class CsvFile extends ProvisionFile {
             }
 
             if (line[brandCol].equals(expectedBrand)) {
-                /* TODO: Different decimal types per profile so that we actually read the decimalpoints. Now we assume
-                    that no files use ,|. for thousands separator, and that no files have decimal values. This is not
-                    accurate
-                 */
-                container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( |-|,\\d+$|\\.\\d+$)", "")), line[productCol], line[refCol], line[nameCol], type);
+                container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
             }
         }
     }

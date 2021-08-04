@@ -38,10 +38,11 @@ class HtmlFileTest {
         htmlFile.setGsmNrCol(3);
         htmlFile.setProvisionCol(0);
         htmlFile.setNameCol(4);
+        htmlFile.setDecimalSep(',');
         htmlFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "html_0_3_2_1_0_4_1_-1");
+        assertEquals(s, "html_0_3_2_1_0_4_1_-1_,");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }

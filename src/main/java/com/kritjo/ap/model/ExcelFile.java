@@ -97,10 +97,11 @@ public class ExcelFile extends ProvisionFile {
         if (gsmNrCol == -1 || productCol == -1 || refCol == -1 || provisionCol == -1 || nameCol == -1)
             throw new IllegalStateException("Set columns first");
         if (type == Type.EXPECTED && brandCol == -1) throw new IllegalStateException("Set columns first");
+        if (decimalSep == Character.MIN_VALUE) throw new IllegalStateException("Set decimal separator");
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("excel" + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol);
+            fileWriter.write("excel" + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -159,7 +160,7 @@ public class ExcelFile extends ProvisionFile {
         ref.setCellType(CellType.STRING);
 
         String gsmConverted = gsm.toString();
-        float provisionConverted = Float.parseFloat(provision.toString());
+        float provisionConverted = Float.parseFloat(provision.toString().replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
         String productConverted = product.toString();
         String nameConverted = name.toString();
         String refConverted = ref.toString();

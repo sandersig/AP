@@ -26,6 +26,8 @@ public abstract class ProvisionFile {
      */
     protected Type type;
 
+    protected char decimalSep;
+
     public ProvisionFile(File file, String name, Type type) {
         this.file = file;
         this.name = name;
@@ -57,6 +59,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
+                provisionFileFromProfile.setDecimalSep(profile[9].charAt(0));
             }
             case "html" -> {
                 provisionFileFromProfile = new HtmlFile(provisionFile, name, type);
@@ -68,6 +71,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
+                provisionFileFromProfile.setDecimalSep(profile[9].charAt(0));
             }
             case "pdf" -> {
                 provisionFileFromProfile = new PdfFile(provisionFile, name, type);
@@ -78,6 +82,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setProvisionCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
+                provisionFileFromProfile.setDecimalSep(profile[8].charAt(0));
             }
             case "excel" -> {
                 provisionFileFromProfile = new ExcelFile(provisionFile, name, type);
@@ -88,10 +93,19 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[5]));
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
+                provisionFileFromProfile.setDecimalSep(profile[8].charAt(0));
             }
             default -> throw new IllegalArgumentException("Provided profile has wrong formating.");
         }
         return provisionFileFromProfile;
+    }
+
+    public void setDecimalSep(char decimalSep) {
+        this.decimalSep = decimalSep;
+    }
+
+    public char getDecimalSep() {
+        return decimalSep;
     }
 
     public static File[] existingProfiles() {
