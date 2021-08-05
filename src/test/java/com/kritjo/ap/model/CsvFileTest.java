@@ -207,7 +207,7 @@ class CsvFileTest {
         f.setAccessible(true);
         provisions = (ArrayList<Provision>) f.get(cProvision);
 
-        Provision prov3 = new Provision(500);
+        Provision prov3 = new Provision(1000);
         prov3.setRef("4321");
         prov3.setProduct("Tele2");
 

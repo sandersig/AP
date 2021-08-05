@@ -24,14 +24,14 @@ class CustomerTest {
     @Test
     @SuppressWarnings("unchecked")
     void addExpected() throws NoSuchFieldException, IllegalAccessException {
-        Field f = customer.getClass().getDeclaredField("excpected");
+        Field f = customer.getClass().getDeclaredField("expected");
         f.setAccessible(true);
-        ProvisionContainer excpected = (ProvisionContainer) f.get(customer);
+        ProvisionContainer expected = (ProvisionContainer) f.get(customer);
         customer.addExpected(provision);
-        Field pf = excpected.getClass().getDeclaredField("container");
+        Field pf = expected.getClass().getDeclaredField("container");
         pf.setAccessible(true);
-        ArrayList<Provision> excpectedArray = (ArrayList<Provision>) pf.get(excpected);
-        assertEquals(provision, excpectedArray.get(0));
+        ArrayList<Provision> expectedArray = (ArrayList<Provision>) pf.get(expected);
+        assertEquals(provision, expectedArray.get(0));
     }
 
     @Test
