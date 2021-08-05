@@ -105,12 +105,6 @@ public class CsvFile extends ProvisionFile {
         return brandCol;
     }
 
-    /**
-     * Read file and create customer objects in container.
-     *
-     * @param container that customer objects should be written to
-     * @throws FileNotFoundException If the file specified in the profile does not exist.
-     */
     @Override
     public void readCustomers(CustomerContainer container) throws FileNotFoundException {
         CsvParserSettings settings = new CsvParserSettings();
@@ -142,6 +136,7 @@ public class CsvFile extends ProvisionFile {
             if(!payedByHK.isEmpty()){
                 if(payedByHK.contains(line[productCol]))
                     continue;
+
             }
             for (int i = 0; i < line.length; i++) {
                 if (line[i] == null) {
@@ -149,21 +144,12 @@ public class CsvFile extends ProvisionFile {
                 }
             }
 
-            //Går nok hella slow, men får testa
-            if(line[gsmNrCol].isBlank()){
-                String currentCustomer = line[nameCol];
-                Integer numberOfGSMPerCustomer = 0;
-                String currentGSM = null;
-                for (String[] line1 : rows){
-                    if(line1[nameCol].equals(currentCustomer) && !line1[gsmNrCol].isBlank() && line1[brandCol].equals(expectedBrand)){
-                        currentGSM = line[gsmNrCol];
-                        numberOfGSMPerCustomer++;
-                    }
-                }
-                if(numberOfGSMPerCustomer == 1)
-                    container.addCustomer(currentGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
-                else{
-                    //TODO: Add to avviksliste for manual check
+            if(line[gsmNrCol].length() < 8){
+                if(!findMatchingCustomer(line, rows)){
+                    //legg til i avvik
+                    continue;
+                }else{
+                    container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
                 }
 
             }
@@ -171,6 +157,27 @@ public class CsvFile extends ProvisionFile {
             if (line[brandCol].equals(expectedBrand)) {
                 container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
             }
+        }
+    }
+
+    private boolean findMatchingCustomer(String[] line, List<String[]> rows) {
+        String currentCustomer = line[nameCol];
+        int numberOfGSMPerCustomer = 0;
+        String currentGSM = null;
+        for (String[] line1 : rows){
+            if(line1[nameCol].equals(currentCustomer) && line1[gsmNrCol].length() == 8){
+                currentGSM = line1[gsmNrCol];
+                if(currentGSM != line1[gsmNrCol])
+                    numberOfGSMPerCustomer++;
+            }
+        }
+        if(numberOfGSMPerCustomer == 1) {
+            //line[gsmNrCol] = currentGSM;
+            container.addCustomer(currentGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+            return true;
+        }else{
+            return false;
+            //TODO: Add to avviksliste for manual check
         }
     }
 

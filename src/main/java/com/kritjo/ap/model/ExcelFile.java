@@ -169,12 +169,6 @@ public class ExcelFile extends ProvisionFile {
 
     }
 
-    /**
-     * Read file and create customer objects in container. Using Apache POI.
-     *
-     * @param container that customer objects should be written to
-     * @throws FileNotFoundException If the file specified in the profile does not exist.
-     */
     @Override
     public void readCustomers(CustomerContainer container) throws IOException {
         Iterator<Row> it = getTableIterator();

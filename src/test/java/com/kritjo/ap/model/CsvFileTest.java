@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -213,4 +214,22 @@ class CsvFileTest {
         assertTrue(new ReflectionEquals(prov3, "").matches(provisions.get(0)));
     }
 
+    @Test
+    void provisionCodesWithoutGSMGetsAddedToCustomerContainerIfSimilarNameExistsInProvisionList() throws IOException {
+        HashSet<String> HKCodes = new HashSet<>();
+
+        CustomerContainer container = new CustomerContainer();
+        csvFile.setGsmNrCol(0);
+        csvFile.setProductCol(1);
+        csvFile.setProvisionCol(2);
+        csvFile.setRefCol(3);
+        csvFile.setNameCol(4);
+        csvFile.readCustomers(container, HKCodes,"10");
+        
+    }
+
+    @Test
+    void provisionCodesWithoutGSMDoesNotGetAddedToCustomerContainerIfTheCustomerNameHasOtherOrdersWithDifferentGSMs(){
+
+    }
 }

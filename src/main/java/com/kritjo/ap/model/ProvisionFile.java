@@ -153,7 +153,23 @@ public abstract class ProvisionFile {
 
     public abstract int getBrandCol();
 
+    /**
+     * Read file and create customer objects in container.
+     *
+     * Used for ACTUAl objects
+     * @param container that customer objects should be written to
+     * @throws FileNotFoundException If the file specified in the profile does not exist.
+     */
     public abstract void readCustomers(CustomerContainer container) throws IOException;
+
+    /**
+     * Read file and create customer objects in container.
+     *
+     * Used for EXPECTED objects
+     * @param container that customer objects should be written to
+     * @param payedByHK
+     * @throws FileNotFoundException If the file specified in the profile does not exist.
+     */
     public abstract void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException;
 
     public void setStartRow(int startRow) {
