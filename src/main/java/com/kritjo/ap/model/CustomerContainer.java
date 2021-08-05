@@ -15,10 +15,18 @@ public class CustomerContainer {
     /**
      * Method that returns the size of the container. In other words, how many customers
      * the container consists of
-     * @return
+     * @return Size of container
      */
     public int getContainerSize(){
         return container.size();
+    }
+
+    /**
+     * Method that returns all the customer containers.
+     * @return the HashMap containing all customers
+     */
+    public HashMap<String, Customer> getAllCustomerContainers(){
+        return container;
     }
     /**
      * @return Customers with deviations as per Customer spesification.
