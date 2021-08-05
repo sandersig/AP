@@ -25,7 +25,7 @@ public class CustomerContainer {
      * Method that returns all the customer containers.
      * @return the HashMap containing all customers
      */
-    public HashMap<String, Customer> getAllCustomerContainers(){
+    public HashMap<String, Customer> getAllCustomers(){
         return container;
     }
     /**

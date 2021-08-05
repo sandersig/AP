@@ -145,40 +145,38 @@ public class CsvFile extends ProvisionFile {
             }
 
             if(line[gsmNrCol].length() < 8){
-                if(!findMatchingCustomer(line, rows)){
-                    //legg til i avvik
+                String foundGSM;
+                foundGSM = findMatchingCustomer(line, rows);
+                if (line[brandCol].equals(expectedBrand) && foundGSM.length() == 8) {
+                    container.addCustomer(foundGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
                     continue;
-                }else{
-                    container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
-                }
-
+                }//TODO: legg til i en avviksliste
             }
 
-            if (line[brandCol].equals(expectedBrand)) {
+            if (line[brandCol].equals(expectedBrand) && line[gsmNrCol].length() == 8) {
                 container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
             }
         }
     }
 
-    private boolean findMatchingCustomer(String[] line, List<String[]> rows) {
+    private String findMatchingCustomer(String[] line, List<String[]> rows) {
         String currentCustomer = line[nameCol];
-        int numberOfGSMPerCustomer = 0;
         String currentGSM = null;
-        for (String[] line1 : rows){
-            if(line1[nameCol].equals(currentCustomer) && line1[gsmNrCol].length() == 8){
+        HashSet<String> foundGSMs = new HashSet<>();
+        int nrOfGSMs = 0;
+        for(String[] line1 : rows) {
+            if (currentCustomer.equals(line1[nameCol]) && line1[gsmNrCol].length() == 8) {
                 currentGSM = line1[gsmNrCol];
-                if(currentGSM != line1[gsmNrCol])
-                    numberOfGSMPerCustomer++;
+                if (!foundGSMs.contains(currentGSM)) {
+                    foundGSMs.add(currentGSM);
+                    nrOfGSMs++;
+                }
             }
         }
-        if(numberOfGSMPerCustomer == 1) {
-            //line[gsmNrCol] = currentGSM;
-            container.addCustomer(currentGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
-            return true;
-        }else{
-            return false;
-            //TODO: Add to avviksliste for manual check
+        if(nrOfGSMs == 1 && currentGSM.length() == 8){
+            return currentGSM;
         }
+        return "many gsms"; //legg til i avvik
     }
 
     @Override

@@ -224,12 +224,22 @@ class CsvFileTest {
         csvFile.setProvisionCol(2);
         csvFile.setRefCol(3);
         csvFile.setNameCol(4);
+        csvFile.setBrandCol(5);
         csvFile.readCustomers(container, HKCodes,"10");
-        
+
+        HashMap<String, Customer> customers = container.getAllCustomers();
+
+        int totalProvisionSum = 0;
+        for(String gsm : customers.keySet()){
+            totalProvisionSum += customers.get(gsm).getActual().sum();
+        }
+
+        assertEquals(4500, totalProvisionSum);
+
     }
 
     @Test
     void provisionCodesWithoutGSMDoesNotGetAddedToCustomerContainerIfTheCustomerNameHasOtherOrdersWithDifferentGSMs(){
-
+        //TODO
     }
 }

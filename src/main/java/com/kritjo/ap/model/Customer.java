@@ -17,7 +17,7 @@ public class Customer {
     /**
      * Expected provision, from source sales system.
      */
-    private final ProvisionContainer excpected = new ProvisionContainer();
+    private final ProvisionContainer expected = new ProvisionContainer();
     /**
      * Actual provision from third party controller system.
      */
@@ -31,17 +31,25 @@ public class Customer {
     }
 
     public void addExpected(Provision p) {
-        excpected.add(p);
+        expected.add(p);
     }
 
     public void addActual(Provision p) {
         actual.add(p);
     }
 
+    public ProvisionContainer getActual(){
+        return actual;
+    }
+
+    public ProvisionContainer getExpected(){
+        return expected;
+    }
+
     /**
      * @return True if the expected provision sum != actual provision sum. Else returns false.
      */
     public boolean hasDeviation() {
-        return !excpected.equals(actual);
+        return !expected.equals(actual);
     }
 }
