@@ -268,6 +268,18 @@ public class NewProfilePanel extends JPanel {
         c.gridx = 1;
         add(decimalSep, c);
 
+        c.gridy = 9;
+        c.gridx = 0;
+        JLabel flipInfo = new JLabel("Er provisionskolonnen negert?");
+        flipInfo.setFont(Main.DEFAULTFONT);
+        add(flipInfo, c);
+
+        c.gridx = 1;
+        JComboBox<Boolean> flip = new JComboBox<>(new Boolean[]{Boolean.TRUE, Boolean.FALSE});
+        flip.setFont(Main.DEFAULTFONT);
+        flip.setSelectedItem(Boolean.FALSE);
+        add(flip, c);
+
         JLabel rowInfo = new JLabel("Hvilken rad inneholder første datapunkt(er)?");
         c.gridx = 0;
         c.gridy = 7;
@@ -289,6 +301,7 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
             provisionFile.setDecimalSep((char) decimalSep.getValue());
+            provisionFile.setFlipNegProvCol((Boolean) flip.getSelectedItem());
             if (finalBrandCol2 != null) provisionFile.setBrandCol(headers.get((String) finalBrandCol2.getSelectedItem()));
             if (tableID.get() != 0) {
                 provisionFile.setTableID(tableID.get());

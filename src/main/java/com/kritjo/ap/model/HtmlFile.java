@@ -110,7 +110,7 @@ public class HtmlFile extends ProvisionFile {
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("html" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
+            fileWriter.write("html" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep + PROFILE_DELIM + flipNegProvCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -164,8 +164,10 @@ public class HtmlFile extends ProvisionFile {
             HtmlTableCell ref = row.getCell(refCol);
             HtmlTableCell name = row.getCell(nameCol);
 
+            float prov = Float.parseFloat(provision.asNormalizedText().replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
+            if (flipNegProvCol) prov *= -1;
 
-            container.addCustomer(gsm.asNormalizedText(), Float.parseFloat(provision.asNormalizedText().replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), product.asNormalizedText(),
+            container.addCustomer(gsm.asNormalizedText(), prov, product.asNormalizedText(),
                     ref.asNormalizedText(), name.asNormalizedText(), type);
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Could not add customer" + row.asNormalizedText());

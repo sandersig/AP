@@ -28,6 +28,8 @@ public abstract class ProvisionFile {
 
     protected char decimalSep;
 
+    protected boolean flipNegProvCol = false;
+
     public ProvisionFile(File file, String name, Type type) {
         this.file = file;
         this.name = name;
@@ -60,6 +62,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
                 provisionFileFromProfile.setDecimalSep(profile[9].charAt(0));
+                provisionFileFromProfile.setFlipNegProvCol(Boolean.parseBoolean(profile[10]));
             }
             case "html" -> {
                 provisionFileFromProfile = new HtmlFile(provisionFile, name, type);
@@ -72,6 +75,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[8]));
                 provisionFileFromProfile.setDecimalSep(profile[9].charAt(0));
+                provisionFileFromProfile.setFlipNegProvCol(Boolean.parseBoolean(profile[10]));
             }
             case "pdf" -> {
                 provisionFileFromProfile = new PdfFile(provisionFile, name, type);
@@ -83,6 +87,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setNameCol(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setDecimalSep(profile[8].charAt(0));
+                provisionFileFromProfile.setFlipNegProvCol(Boolean.parseBoolean(profile[9]));
             }
             case "excel" -> {
                 provisionFileFromProfile = new ExcelFile(provisionFile, name, type);
@@ -94,6 +99,7 @@ public abstract class ProvisionFile {
                 provisionFileFromProfile.setStartRow(Integer.parseInt(profile[6]));
                 provisionFileFromProfile.setBrandCol(Integer.parseInt(profile[7]));
                 provisionFileFromProfile.setDecimalSep(profile[8].charAt(0));
+                provisionFileFromProfile.setFlipNegProvCol(Boolean.parseBoolean(profile[9]));
             }
             default -> throw new IllegalArgumentException("Provided profile has wrong formating.");
         }
@@ -117,6 +123,14 @@ public abstract class ProvisionFile {
             }
         }
         return existingProfiles.toArray(new File[0]);
+    }
+
+    public void setFlipNegProvCol(boolean flipNegProvCol) {
+        this.flipNegProvCol = flipNegProvCol;
+    }
+
+    public boolean isFlipNegProvCol() {
+        return flipNegProvCol;
     }
 
     public abstract void setProvisionCol(int provisionCol);

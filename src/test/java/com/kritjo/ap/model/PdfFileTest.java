@@ -35,10 +35,11 @@ class PdfFileTest {
         pdfFile.setProvisionCol(0);
         pdfFile.setNameCol(4);
         pdfFile.setDecimalSep(',');
+        pdfFile.setFlipNegProvCol(true);
         pdfFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "pdf_0_3_2_1_0_4_-1_,");
+        assertEquals(s, "pdf_0_3_2_1_0_4_-1_,_true");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }

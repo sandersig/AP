@@ -101,7 +101,7 @@ public class ExcelFile extends ProvisionFile {
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("excel" + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
+            fileWriter.write("excel" + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep + PROFILE_DELIM + flipNegProvCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -161,6 +161,8 @@ public class ExcelFile extends ProvisionFile {
 
         String gsmConverted = gsm.toString();
         float provisionConverted = Float.parseFloat(provision.toString().replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
+        if (flipNegProvCol) provisionConverted *= -1;
+
         String productConverted = product.toString();
         String nameConverted = name.toString();
         String refConverted = ref.toString();

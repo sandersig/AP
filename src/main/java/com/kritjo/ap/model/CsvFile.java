@@ -79,7 +79,7 @@ public class CsvFile extends ProvisionFile {
         File profile = new File(name + ".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("csv" + PROFILE_DELIM + delim + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
+            fileWriter.write("csv" + PROFILE_DELIM + delim + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + startRow + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep + PROFILE_DELIM + flipNegProvCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");
@@ -113,22 +113,25 @@ public class CsvFile extends ProvisionFile {
         CsvParser parser = new CsvParser(settings);
         List<String[]> rows = parser.parseAll(file);
 
+
         if (startRow > 0) {
             rows.subList(0, startRow).clear();
         }
 
         for (String[] line : rows) {
+            float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
+            if (flipNegProvCol) prov *= -1;
             if(line[gsmNrCol].length() < 8){
                 String foundGSM;
                 try {
                     foundGSM = findMatchingCustomer(line, rows);
-                    container.addCustomer(foundGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                    container.addCustomer(foundGSM, prov, line[productCol], line[refCol], line[nameCol], type);
                 } catch (NoSuchElementException e ) {
                     // TODO: Make an actual deviation list
-                    container.addCustomer("33333333", Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                    container.addCustomer("33333333", prov, line[productCol], line[refCol], line[nameCol], type);
                 }
             }
-            else container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+            else container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
 
         }
     }
@@ -156,20 +159,23 @@ public class CsvFile extends ProvisionFile {
                 }
             }
 
+            float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
+            if (flipNegProvCol) prov *= -1;
+
             if(line[gsmNrCol].length() < 8){
                 String foundGSM;
                 try {
                     foundGSM = findMatchingCustomer(line, rows);
                     if (line[brandCol].equals(expectedBrand)) {
-                        container.addCustomer(foundGSM, Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                        container.addCustomer(foundGSM, prov, line[productCol], line[refCol], line[nameCol], type);
                     }
                 } catch (NoSuchElementException e) {
                     // TODO: Make an actual deviation-list
-                    container.addCustomer("33333333", Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                    container.addCustomer("33333333", prov, line[productCol], line[refCol], line[nameCol], type);
                 }
             }
             else if (line[brandCol].equals(expectedBrand)) {
-                container.addCustomer(line[gsmNrCol], Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), ".")), line[productCol], line[refCol], line[nameCol], type);
+                container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
             }
         }
     }
@@ -184,13 +190,14 @@ public class CsvFile extends ProvisionFile {
         int nrOfGSMs = 0;
         String possibleGSM = null;
         for(String[] line1 : rows) {
+            if (line1[gsmNrCol] == null) line1[gsmNrCol] = "";
             if (currentCustomer.equalsIgnoreCase(line1[nameCol]) && line1[gsmNrCol].length() == 8) {
                 currentGSM = line1[gsmNrCol];
                 if (!foundGSMs.contains(currentGSM)) {
                     foundGSMs.add(currentGSM);
                     nrOfGSMs++;
                 }
-            } else if (line1[nameCol].toLowerCase().contains(lastName.toLowerCase())) {
+            } else if (line1[nameCol].toLowerCase().contains(lastName.toLowerCase()) && line1[gsmNrCol].length() == 8) {
                 possibleGSM = line1[gsmNrCol];
                 possibleGSMs.add(possibleGSM);
             }

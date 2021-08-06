@@ -26,6 +26,7 @@ class ProvisionFileTest {
         csvFile.setProvisionCol(2);
         csvFile.setDecimalSep(',');
         csvFile.setNameCol(4);
+        csvFile.setFlipNegProvCol(true);
 
         CsvFile csvFileFromProfile = (CsvFile) ProvisionFile.getFileFromProfile("csvprofile", new File("example.csv"), "CsvFile", ProvisionFile.Type.ACTUAL);
 
@@ -38,6 +39,7 @@ class ProvisionFileTest {
         excelFile.setProvisionCol(0);
         excelFile.setDecimalSep(',');
         excelFile.setNameCol(4);
+        excelFile.setFlipNegProvCol(true);
 
         ExcelFile excelFileFromProfile = (ExcelFile) ProvisionFile.getFileFromProfile("excelprofile", new File("example.xls"), "ExcelFile", ProvisionFile.Type.ACTUAL);
 
@@ -51,6 +53,7 @@ class ProvisionFileTest {
         htmlFile.setProvisionCol(0);
         htmlFile.setDecimalSep(',');
         htmlFile.setNameCol(4);
+        htmlFile.setFlipNegProvCol(true);
 
         HtmlFile htmlFileFromProfile = (HtmlFile) ProvisionFile.getFileFromProfile("htmlprofile", new File("example.html"), "HtmlFile", ProvisionFile.Type.ACTUAL);
 
@@ -64,6 +67,7 @@ class ProvisionFileTest {
         pdfFile.setProvisionCol(0);
         pdfFile.setDecimalSep(',');
         pdfFile.setNameCol(4);
+        pdfFile.setFlipNegProvCol(true);
 
         PdfFile pdfFileFromProfile = (PdfFile) ProvisionFile.getFileFromProfile("pdfprofile", new File("example.pdf"), "PdfFile", ProvisionFile.Type.ACTUAL);
 

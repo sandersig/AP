@@ -121,5 +121,6 @@ public class Controller {
         }
 
         ArrayList<Customer> deviations = customerContainer.getDeviations();
+        System.out.println();
     }
 }

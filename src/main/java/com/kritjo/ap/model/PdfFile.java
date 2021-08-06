@@ -88,7 +88,7 @@ public class PdfFile extends ProvisionFile {
         File profile = new File(name+".prf");
         if (profile.createNewFile()) {
             FileWriter fileWriter = new FileWriter(name + ".prf");
-            fileWriter.write("pdf" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep);
+            fileWriter.write("pdf" + PROFILE_DELIM + tableID + PROFILE_DELIM + gsmNrCol + PROFILE_DELIM + productCol + PROFILE_DELIM + refCol + PROFILE_DELIM + provisionCol + PROFILE_DELIM + nameCol + PROFILE_DELIM + brandCol + PROFILE_DELIM + decimalSep + PROFILE_DELIM + flipNegProvCol);
             fileWriter.close();
         } else {
             throw new FileAlreadyExistsException("File already exists");

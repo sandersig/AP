@@ -36,10 +36,11 @@ class ExcelFileTest {
         excelFile.setProvisionCol(0);
         excelFile.setNameCol(4);
         excelFile.setDecimalSep(',');
+        excelFile.setFlipNegProvCol(true);
         excelFile.saveProfile("testing");
         Scanner sc = new Scanner(new File("testing.prf"));
         String s = sc.nextLine();
-        assertEquals(s, "excel_3_2_1_0_4_1_-1_,");
+        assertEquals(s, "excel_3_2_1_0_4_1_-1_,_true");
         sc.close();
         assertTrue((new File("testing.prf")).delete());
     }
