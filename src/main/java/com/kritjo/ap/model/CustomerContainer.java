@@ -32,12 +32,20 @@ public class CustomerContainer {
     /**
      * @return Customers with deviations as per Customer spesification.
      */
-    public ArrayList<Customer> getDeviations() {
+    public ArrayList<Customer> getAllDeviations() {
         ArrayList<Customer> deviatingCustomers = new ArrayList<>();
         for (Customer c : container.values()) {
             if (c.hasDeviation()) {
                 deviatingCustomers.add(c);
             }
+        }
+        return deviatingCustomers;
+    }
+
+    public ArrayList<ProvisionWithNameAndGsm> getDeviations() {
+        ArrayList<ProvisionWithNameAndGsm> deviatingCustomers = new ArrayList<>();
+        for (Customer c : container.values()) {
+            deviatingCustomers.addAll(c.getDeviations());
         }
         return deviatingCustomers;
     }

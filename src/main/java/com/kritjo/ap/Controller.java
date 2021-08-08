@@ -136,7 +136,7 @@ public class Controller {
             p.readCustomers(customerContainer, productManualActual);
         }
 
-        ArrayList<Customer> deviations = customerContainer.getDeviations();
+        ArrayList<Customer> deviations = customerContainer.getAllDeviations();
         System.out.println();
 
         FileWriter fw = new FileWriter("deviations.csv");
@@ -157,6 +157,12 @@ public class Controller {
             fw.write(p.getGsm() + ";" + p.getName() + ";" + (p.getType() == (ProvisionFile.Type.ACTUAL) ? "ACTUAL;" : "EXCPECTED;") + p.getProduct() + ";" + p.getProvision() + "\n");
         }
         fw.close();
+
+        fw = new FileWriter("deviationsInternalMatch.csv");
+        for (ProvisionWithNameAndGsm p : customerContainer.getDeviations()) {
+            fw.write(p.getGsm() + ";" + p.getName() + ";" + (p.getType() == (ProvisionFile.Type.ACTUAL) ? "ACTUAL;" : "EXCPECTED;") + p.getProduct() + ";" + p.getProvision() + "\n");
+        }
+        System.out.println();
     }
 
 }

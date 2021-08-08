@@ -28,7 +28,7 @@ public class APOptionsPanel extends JPanel {
         c.gridy = 2;
         add(HKCodesInfo, c);
 
-        JList<String> HKCodes = new JList<>(controller.getCodes(ProvisionFile.Type.EXPECTED));
+        CheckboxList HKCodes = new CheckboxList(controller.getCodes(ProvisionFile.Type.EXPECTED));
         HKCodes.setFont(Main.DEFAULTFONT);
         HKCodes.setLayoutOrientation(JList.VERTICAL);
         HKCodes.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -43,7 +43,7 @@ public class APOptionsPanel extends JPanel {
         c.gridx = 1;
         add(manualCodesActualInfo, c);
 
-        JList<String> manualCodesActual = new JList<>(controller.getCodes(ProvisionFile.Type.ACTUAL));
+        CheckboxList manualCodesActual = new CheckboxList(controller.getCodes(ProvisionFile.Type.ACTUAL));
         manualCodesActual.setFont(Main.DEFAULTFONT);
         manualCodesActual.setLayoutOrientation(JList.VERTICAL);
         manualCodesActual.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -58,7 +58,7 @@ public class APOptionsPanel extends JPanel {
         c.gridx = 2;
         add(manualCodesInfo, c);
 
-        JList<String> manualCodes = new JList<>(controller.getCodes(ProvisionFile.Type.EXPECTED));
+        CheckboxList manualCodes = new CheckboxList(controller.getCodes(ProvisionFile.Type.EXPECTED));
         manualCodes.setFont(Main.DEFAULTFONT);
         manualCodes.setLayoutOrientation(JList.VERTICAL);
         manualCodes.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -70,9 +70,30 @@ public class APOptionsPanel extends JPanel {
         c.gridwidth = 3;
         JButton start = new JButton("Start AP");
         start.addActionListener(actionEvent -> {
-            HashSet<String> HKCodesHash = new HashSet<>(HKCodes.getSelectedValuesList());
-            HashSet<String> productManualActual = new HashSet<>(manualCodesActual.getSelectedValuesList());
-            HashSet<String> productManualExcpected = new HashSet<>(manualCodes.getSelectedValuesList());
+            HashSet<String> HKCodesHash = new HashSet<>();
+            HKCodes.setAllSelected();
+            for (JCheckBox j : HKCodes.getSelectedValuesList()) {
+                if (j.isSelected()) {
+                    HKCodesHash.add(j.getText());
+                }
+            }
+            HKCodes.setAllDeselected();
+            HashSet<String> productManualActual = new HashSet<>();
+            manualCodesActual.setAllSelected();
+            for (JCheckBox j : manualCodesActual.getSelectedValuesList()) {
+                if (j.isSelected()) {
+                    productManualActual.add(j.getText());
+                }
+            }
+            manualCodesActual.setAllDeselected();
+            HashSet<String> productManualExcpected = new HashSet<>();
+            manualCodes.setAllSelected();
+            for (JCheckBox j : manualCodes.getSelectedValuesList()) {
+                if (j.isSelected()) {
+                    productManualExcpected.add(j.getText());
+                }
+            }
+            manualCodes.setAllDeselected();
             try {
                 controller.startAPAfterOptions((String) brand.getSelectedItem(), HKCodesHash, productManualActual, productManualExcpected);
             } catch (IOException e) {
