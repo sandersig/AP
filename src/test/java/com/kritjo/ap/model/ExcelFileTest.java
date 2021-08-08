@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -170,7 +171,8 @@ class ExcelFileTest {
         excelFile.setProvisionCol(2);
         excelFile.setRefCol(3);
         excelFile.setNameCol(4);
-        excelFile.readCustomers(container);
+        HashSet<String> productManual = new HashSet<>();
+        excelFile.readCustomers(container, productManual);
 
         Field f = container.getClass().getDeclaredField("container");
         f.setAccessible(true);

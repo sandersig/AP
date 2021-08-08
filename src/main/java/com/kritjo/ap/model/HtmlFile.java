@@ -154,7 +154,7 @@ public class HtmlFile extends ProvisionFile {
      * @param container
      * @param row
      */
-    private void createCostumerContainer(CustomerContainer container, HtmlTableRow row) {
+    private void createCostumerContainer(CustomerContainer container, HtmlTableRow row, HashSet<String> productManual) {
         try {
             HtmlTableCell gsm = row.getCell(gsmNrCol);
             HtmlTableCell provision = row.getCell(provisionCol);
@@ -165,25 +165,30 @@ public class HtmlFile extends ProvisionFile {
             float prov = Float.parseFloat(provision.asNormalizedText().replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
             if (flipNegProvCol) prov *= -1;
 
-            container.addCustomer(gsm.asNormalizedText(), prov, product.asNormalizedText(),
-                    ref.asNormalizedText(), name.asNormalizedText(), type);
+            if (productManual.contains(product.asNormalizedText())) {
+                container.addManual(gsm.asNormalizedText(), prov, product.asNormalizedText(), ref.asNormalizedText(),
+                        name.asNormalizedText(), type);
+            } else {
+                container.addCustomer(gsm.asNormalizedText(), prov, product.asNormalizedText(),
+                        ref.asNormalizedText(), name.asNormalizedText(), type);
+            }
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Could not add customer" + row.asNormalizedText());
         }
     }
 
     @Override
-    public void readCustomers(CustomerContainer container) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> productManual) throws IOException {
         HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {
             HtmlTableRow row = table.getRow(i);
-            createCostumerContainer(container, row);
+            createCostumerContainer(container, row, productManual);
         }
     }
 
     @Override
-    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand, HashSet<String> productManual) throws IOException {
         HtmlTable table = getTable();
 
         for (int i = startRow; i < table.getRowCount(); i++) {
@@ -195,7 +200,7 @@ public class HtmlFile extends ProvisionFile {
                 if(payedByHK.contains(row.getCell(productCol).asNormalizedText()))
                     continue;
             }
-            createCostumerContainer(container, row);
+            createCostumerContainer(container, row, productManual);
         }
     }
 

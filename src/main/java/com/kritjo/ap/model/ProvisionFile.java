@@ -174,7 +174,7 @@ public abstract class ProvisionFile {
      * @param container that customer objects should be written to
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
-    public abstract void readCustomers(CustomerContainer container) throws IOException;
+    public abstract void readCustomers(CustomerContainer container, HashSet<String> productManual) throws IOException;
 
     /**
      * Read file and create customer objects in container.
@@ -184,7 +184,7 @@ public abstract class ProvisionFile {
      * @param payedByHK
      * @throws FileNotFoundException If the file specified in the profile does not exist.
      */
-    public abstract void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException;
+    public abstract void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand, HashSet<String> productManual) throws IOException;
 
     public void setStartRow(int startRow) {
         throw new UnsupportedOperationException("Not supported for this filetype");
@@ -221,7 +221,11 @@ public abstract class ProvisionFile {
         HashSet<String> unique = new HashSet<>();
 
         for (String[] row : fileRead) {
-            unique.add(row[col]);
+            try {
+                unique.add(row[col]);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.err.println("Could not find column " + col + " in row: " + Arrays.toString(row));
+            }
         }
 
         return unique.toArray(new String[0]);

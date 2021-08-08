@@ -180,7 +180,8 @@ class HtmlFileTest {
         htmlFile.setRefCol(3);
         htmlFile.setNameCol(4);
         htmlFile.setTableID(0);
-        htmlFile.readCustomers(container);
+        HashSet<String> productManual = new HashSet<>();
+        htmlFile.readCustomers(container, productManual);
 
         Field f = container.getClass().getDeclaredField("container");
         f.setAccessible(true);
@@ -236,7 +237,8 @@ class HtmlFileTest {
         htmlFileWithHKCodes.setNameCol(4);
         htmlFileWithHKCodes.setTableID(0);
         htmlFileWithHKCodes.setBrandCol(5); //test value
-        htmlFileWithHKCodes.readCustomers(container, HKCodes, "10");
+        HashSet<String> productManual = new HashSet<>();
+        htmlFileWithHKCodes.readCustomers(container, HKCodes, "10", productManual);
 
         assertEquals(3, container.getContainerSize());
     }

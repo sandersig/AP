@@ -1,9 +1,6 @@
 package com.kritjo.ap;
 
-import com.kritjo.ap.model.Customer;
-import com.kritjo.ap.model.CustomerContainer;
-import com.kritjo.ap.model.Provision;
-import com.kritjo.ap.model.ProvisionFile;
+import com.kritjo.ap.model.*;
 import com.kritjo.ap.view.*;
 
 import javax.swing.*;
@@ -113,22 +110,30 @@ public class Controller {
         return brands.toArray(new String[0]);
     }
 
-    public String[] getCodes() throws IOException {
+    public String[] getCodes(ProvisionFile.Type type) throws IOException {
         ArrayList<String> codes = new ArrayList<>();
 
-        for (ProvisionFile p : expected) {
+        ArrayList<ProvisionFile> selected;
+
+        if (type == ProvisionFile.Type.ACTUAL) {
+            selected = actual;
+        } else {
+            selected = expected;
+        }
+
+        for (ProvisionFile p : selected) {
             String[] uniqueInCol = ProvisionFile.uniqueInCol(p, p.getProductCol());
             codes.addAll(Arrays.asList(uniqueInCol));
         }
         return codes.toArray(new String[0]);
     }
 
-    public void startAPAfterOptions(String brand, HashSet<String> hkCodesHash) throws IOException {
+    public void startAPAfterOptions(String brand, HashSet<String> hkCodesHash, HashSet<String> productManualActual, HashSet<String> productManualExcpected) throws IOException {
         for (ProvisionFile p : expected) {
-            p.readCustomers(customerContainer, hkCodesHash, brand);
+            p.readCustomers(customerContainer, hkCodesHash, brand, productManualExcpected);
         }
         for (ProvisionFile p : actual) {
-            p.readCustomers(customerContainer);
+            p.readCustomers(customerContainer, productManualActual);
         }
 
         ArrayList<Customer> deviations = customerContainer.getDeviations();
@@ -146,5 +151,12 @@ public class Controller {
             }
         }
         fw.close();
+
+        fw = new FileWriter("manual.csv");
+        for (ProvisionWithNameAndGsm p : customerContainer.getManual()) {
+            fw.write(p.getGsm() + ";" + p.getName() + ";" + (p.getType() == (ProvisionFile.Type.ACTUAL) ? "ACTUAL;" : "EXCPECTED;") + p.getProduct() + ";" + p.getProvision() + "\n");
+        }
+        fw.close();
     }
+
 }

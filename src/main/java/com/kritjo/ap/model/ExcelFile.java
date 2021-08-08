@@ -147,7 +147,7 @@ public class ExcelFile extends ProvisionFile {
      * @param container
      * @param row
      */
-    private void createCostumerContainer(CustomerContainer container, Row row){
+    private void createCostumerContainer(CustomerContainer container, Row row, HashSet<String> productManual){
         Cell gsm = row.getCell(gsmNrCol);
         gsm.setCellType(CellType.STRING);
         Cell provision = row.getCell(provisionCol);
@@ -167,12 +167,15 @@ public class ExcelFile extends ProvisionFile {
         String nameConverted = name.toString();
         String refConverted = ref.toString();
 
-        container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
-
+        if (productManual.contains(productConverted)) {
+            container.addManual(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+        } else {
+            container.addCustomer(gsmConverted, provisionConverted, productConverted, refConverted, nameConverted, type);
+        }
     }
 
     @Override
-    public void readCustomers(CustomerContainer container) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> productManual) throws IOException {
         Iterator<Row> it = getTableIterator();
 
         for (int i = 0; i < startRow; i++)
@@ -180,11 +183,11 @@ public class ExcelFile extends ProvisionFile {
 
         while (it.hasNext()) {
             Row row = it.next();
-            createCostumerContainer(container, row);
+            createCostumerContainer(container, row, productManual);
         }
     }
     @Override
-    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand, HashSet<String> productManual) throws IOException {
         Iterator<Row> it = getTableIterator();
 
         for (int i = 0; i < startRow; i++)
@@ -206,7 +209,7 @@ public class ExcelFile extends ProvisionFile {
                 if(payedByHK.contains(productConverted))
                     continue;
             }
-            createCostumerContainer(container, row);
+            createCostumerContainer(container, row, productManual);
         }
     }
 

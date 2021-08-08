@@ -119,7 +119,7 @@ public class PdfFile extends ProvisionFile {
      * Not yet a supported operation. Will be implemented soonTM.
      */
     @Override
-    public void readCustomers(CustomerContainer container) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> productManual) throws IOException {
         PDDocument document = PDDocument.load(file);
         PDFTextStripper s = new PDFTextStripper();
         String content = s.getText(document);
@@ -149,7 +149,7 @@ public class PdfFile extends ProvisionFile {
 
     }
     @Override
-    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand, HashSet<String> productManual) throws IOException {
         //TODO: Not implemented yet
     }
 

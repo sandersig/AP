@@ -173,7 +173,8 @@ class CsvFileTest {
         csvFile.setProvisionCol(2);
         csvFile.setRefCol(3);
         csvFile.setNameCol(4);
-        csvFile.readCustomers(container);
+        HashSet<String> productManual = new HashSet<>();
+        csvFile.readCustomers(container, productManual);
 
         Field f = container.getClass().getDeclaredField("container");
         f.setAccessible(true);
@@ -226,7 +227,8 @@ class CsvFileTest {
         csvFile.setRefCol(3);
         csvFile.setNameCol(4);
         csvFile.setBrandCol(5);
-        csvFile.readCustomers(container, HKCodes,"10");
+        HashSet<String> productManual = new HashSet<>();
+        csvFile.readCustomers(container, HKCodes,"10", productManual);
 
         HashMap<String, Customer> customers = container.getAllCustomers();
 

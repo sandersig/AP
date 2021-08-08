@@ -11,6 +11,7 @@ public class CustomerContainer {
      * Data structure of customers, with GSM as key.
      */
     private final HashMap<String, Customer> container = new HashMap<>();
+    private final ArrayList<ProvisionWithNameAndGsm> manual = new ArrayList<>();
 
     /**
      * Method that returns the size of the container. In other words, how many customers
@@ -69,5 +70,13 @@ public class CustomerContainer {
             }
             container.put(gsm, newCustomer);
         }
+    }
+
+    public void addManual(String gsm, float prov, String product, String ref, String name, ProvisionFile.Type type) {
+        manual.add(new ProvisionWithNameAndGsm(gsm, prov, product, ref, name, type));
+    }
+
+    public ArrayList<ProvisionWithNameAndGsm> getManual() {
+        return manual;
     }
 }

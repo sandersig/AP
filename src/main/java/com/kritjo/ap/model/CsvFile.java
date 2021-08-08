@@ -107,7 +107,7 @@ public class CsvFile extends ProvisionFile {
     }
 
     @Override
-    public void readCustomers(CustomerContainer container) throws FileNotFoundException {
+    public void readCustomers(CustomerContainer container, HashSet<String> productManual) throws FileNotFoundException {
         CsvParserSettings settings = new CsvParserSettings();
         settings.detectFormatAutomatically();
         CsvParser parser = new CsvParser(settings);
@@ -121,12 +121,15 @@ public class CsvFile extends ProvisionFile {
         for (String[] line : rows) {
             float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
             if (flipNegProvCol) prov *= -1;
+            if (productManual.contains(line[productCol])) {
+                container.addManual(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
+            }
             container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
         }
     }
 
     @Override
-    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand) throws IOException {
+    public void readCustomers(CustomerContainer container, HashSet<String> payedByHK, String expectedBrand, HashSet<String> productManual) throws IOException {
         CsvParserSettings settings = new CsvParserSettings();
         settings.detectFormatAutomatically();
         CsvParser parser = new CsvParser(settings);
@@ -140,8 +143,8 @@ public class CsvFile extends ProvisionFile {
             if(!payedByHK.isEmpty()){
                 if(payedByHK.contains(line[productCol]))
                     continue;
-
             }
+
             for (int i = 0; i < line.length; i++) {
                 if (line[i] == null) {
                     line[i] = "";
@@ -150,6 +153,13 @@ public class CsvFile extends ProvisionFile {
 
             float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
             if (flipNegProvCol) prov *= -1;
+
+            if(!productManual.isEmpty()) {
+                if (productManual.contains(line[productCol])) {
+                    container.addManual(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
+                    continue;
+                }
+            }
 
             if (line[brandCol].equals(expectedBrand)) {
                 container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -164,7 +165,8 @@ class PdfFileTest {
     CustomerContainer container = new CustomerContainer();
     @Test
     void checkIfTextIsReadInCorrectly() throws IOException {
-        pdfFile.readCustomers(container);
+        HashSet<String> productManual = new HashSet<>();
+        pdfFile.readCustomers(container, productManual);
     }
 
     @Test
