@@ -18,7 +18,7 @@ public class FilePanel extends JPanel {
         JButton addFile = new JButton("Legg til fil");
         addFile.setFont(Main.DEFAULTFONT);
         addFile.addActionListener(actionEvent -> {
-            JFileChooser fileChooser = new JFileChooser();
+            JFileChooser fileChooser = new JFileChooser(controller.getCurrentDir());
 
             FileNameExtensionFilter acceptedTypes = new FileNameExtensionFilter("Accepted types (csv, xls, xlsx, html, pdf)", "csv", "xls", "xlsx", "html", "pdf");
             fileChooser.setFileFilter(acceptedTypes);
@@ -28,6 +28,7 @@ public class FilePanel extends JPanel {
             File file = null;
             if (status == JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
+                controller.setCurrentDir(file);
             }
 
             File[] existingProfiles = controller.existingProfiles();

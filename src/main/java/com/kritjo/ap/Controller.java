@@ -17,10 +17,19 @@ public class Controller {
     private MainWindow mainWindow;
     private MainContent mainContent;
     private final Stack<JComponent> temp = new Stack<>();
+    private File currentDir;
 
     private CustomerContainer customerContainer;
     private ArrayList<ProvisionFile> expected;
     private ArrayList<ProvisionFile> actual;
+
+    public File getCurrentDir() {
+        return currentDir;
+    }
+
+    public void setCurrentDir(File currentDir) {
+        this.currentDir = currentDir;
+    }
 
     public void addFile(ProvisionFile fileFromProfile, ProvisionFile.Type type) {
         if (type == ProvisionFile.Type.EXPECTED) expected.add(fileFromProfile);

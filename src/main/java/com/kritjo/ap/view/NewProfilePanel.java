@@ -82,13 +82,14 @@ public class NewProfilePanel extends JPanel {
 
 
         kildefil.addActionListener(actionEvent -> {
-            JFileChooser fileDial = new JFileChooser();
+            JFileChooser fileDial = new JFileChooser(controller.getCurrentDir());
             fileDial.setApproveButtonText("Fortsett");
             FileNameExtensionFilter acceptedTypes = new FileNameExtensionFilter("Accepted types (csv, xls, xlsx, html, pdf)", "csv", "xls", "xlsx", "html", "pdf");
             fileDial.setFileFilter(acceptedTypes);
             int status = fileDial.showOpenDialog(this);
 
             if (status == JFileChooser.APPROVE_OPTION) {
+                controller.setCurrentDir(fileDial.getSelectedFile());
                 try {
                     newProfile(profileName.getText(), fileDial.getSelectedFile(), (ProvisionFile.Type) type.getSelectedItem());
                 } catch (IOException e) {
@@ -245,7 +246,7 @@ public class NewProfilePanel extends JPanel {
 
         JFormattedTextField.AbstractFormatter decimalFormat = new JFormattedTextField.AbstractFormatter() {
             @Override
-            public Object stringToValue(String s) throws ParseException {
+            public Object stringToValue(String s) {
                 if (s.length() == 1) {
                     return s.charAt(0);
                 } else if (s.length() == 0) {
@@ -255,7 +256,7 @@ public class NewProfilePanel extends JPanel {
             }
 
             @Override
-            public String valueToString(Object o) throws ParseException {
+            public String valueToString(Object o) {
                 if (o == null) {
                     return "";
                 } else return o.toString();
@@ -301,6 +302,7 @@ public class NewProfilePanel extends JPanel {
             provisionFile.setRefCol(headers.get((String) refCol.getSelectedItem()));
             provisionFile.setStartRow((Integer) row.getValue());
             provisionFile.setDecimalSep((char) decimalSep.getValue());
+            assert(flip.getSelectedItem() != null);
             provisionFile.setFlipNegProvCol((Boolean) flip.getSelectedItem());
             if (finalBrandCol2 != null) provisionFile.setBrandCol(headers.get((String) finalBrandCol2.getSelectedItem()));
             if (tableID.get() != 0) {
