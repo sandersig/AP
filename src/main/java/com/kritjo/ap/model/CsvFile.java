@@ -121,18 +121,7 @@ public class CsvFile extends ProvisionFile {
         for (String[] line : rows) {
             float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
             if (flipNegProvCol) prov *= -1;
-            if(line[gsmNrCol].length() < 8){
-                String foundGSM;
-                try {
-                    foundGSM = findMatchingCustomer(line, rows);
-                    container.addCustomer(foundGSM, prov, line[productCol], line[refCol], line[nameCol], type);
-                } catch (NoSuchElementException e ) {
-                    // TODO: Make an actual deviation list
-                    container.addCustomer("33333333", prov, line[productCol], line[refCol], line[nameCol], type);
-                }
-            }
-            else container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
-
+            container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
         }
     }
 
@@ -162,51 +151,10 @@ public class CsvFile extends ProvisionFile {
             float prov = Float.parseFloat((line[provisionCol]).replaceAll("( )", "").replaceAll(String.valueOf(decimalSep), "."));
             if (flipNegProvCol) prov *= -1;
 
-            if(line[gsmNrCol].length() < 8){
-                String foundGSM;
-                try {
-                    foundGSM = findMatchingCustomer(line, rows);
-                    if (line[brandCol].equals(expectedBrand)) {
-                        container.addCustomer(foundGSM, prov, line[productCol], line[refCol], line[nameCol], type);
-                    }
-                } catch (NoSuchElementException e) {
-                    // TODO: Make an actual deviation-list
-                    container.addCustomer("33333333", prov, line[productCol], line[refCol], line[nameCol], type);
-                }
-            }
-            else if (line[brandCol].equals(expectedBrand)) {
+            if (line[brandCol].equals(expectedBrand)) {
                 container.addCustomer(line[gsmNrCol], prov, line[productCol], line[refCol], line[nameCol], type);
             }
         }
-    }
-
-    private String findMatchingCustomer(String[] line, List<String[]> rows) throws NoSuchElementException {
-        String currentCustomer = line[nameCol];
-        String[] currentCustomerNamesSep = currentCustomer.split(" ");
-        String lastName = currentCustomerNamesSep[currentCustomerNamesSep.length -1];
-        String currentGSM = null;
-        HashSet<String> foundGSMs = new HashSet<>();
-        HashSet<String> possibleGSMs = new HashSet<>();
-        int nrOfGSMs = 0;
-        String possibleGSM = null;
-        for(String[] line1 : rows) {
-            if (line1[gsmNrCol] == null) line1[gsmNrCol] = "";
-            if (currentCustomer.equalsIgnoreCase(line1[nameCol]) && line1[gsmNrCol].length() == 8) {
-                currentGSM = line1[gsmNrCol];
-                if (!foundGSMs.contains(currentGSM)) {
-                    foundGSMs.add(currentGSM);
-                    nrOfGSMs++;
-                }
-            } else if (line1[nameCol].toLowerCase().contains(lastName.toLowerCase()) && line1[gsmNrCol].length() == 8) {
-                possibleGSM = line1[gsmNrCol];
-                possibleGSMs.add(possibleGSM);
-            }
-        }
-
-        if(nrOfGSMs == 1 && currentGSM.length() == 8) return currentGSM;
-        else if (possibleGSMs.size() == 1) return possibleGSM;
-
-        throw new NoSuchElementException("More than one matching number"); //legg til i avvik
     }
 
     @Override

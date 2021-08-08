@@ -52,4 +52,12 @@ public class Customer {
     public boolean hasDeviation() {
         return !expected.equals(actual);
     }
+
+    public String getGSM() {
+        return GSM;
+    }
+
+    public String getName() {
+        return NAME;
+    }
 }

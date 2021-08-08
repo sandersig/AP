@@ -35,4 +35,8 @@ public class ProvisionContainer {
 
         return sum() == ((ProvisionContainer) other).sum();
     }
+
+    public ArrayList<Provision> getContainer() {
+        return container;
+    }
 }

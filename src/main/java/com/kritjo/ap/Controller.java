@@ -2,11 +2,13 @@ package com.kritjo.ap;
 
 import com.kritjo.ap.model.Customer;
 import com.kritjo.ap.model.CustomerContainer;
+import com.kritjo.ap.model.Provision;
 import com.kritjo.ap.model.ProvisionFile;
 import com.kritjo.ap.view.*;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,5 +133,18 @@ public class Controller {
 
         ArrayList<Customer> deviations = customerContainer.getDeviations();
         System.out.println();
+
+        FileWriter fw = new FileWriter("deviations.csv");
+        for (Customer c : deviations) {
+            ArrayList<Provision> actual = c.getActual().getContainer();
+            for (Provision p : actual) {
+                fw.write(c.getGSM()+ ";"+ c.getName() + ";" + "ACTUAL;" + p.getProduct() + ";" + p.getProvision() + "\n");
+            }
+            ArrayList<Provision> excpected = c.getExpected().getContainer();
+            for (Provision p : excpected) {
+                fw.write(c.getGSM()+ ";"+ c.getName() + ";" + "EXCPECTED;" + p.getProduct() + ";" + p.getProvision() + "\n");
+            }
+        }
+        fw.close();
     }
 }

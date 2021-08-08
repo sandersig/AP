@@ -156,8 +156,6 @@ public class HtmlFile extends ProvisionFile {
      */
     private void createCostumerContainer(CustomerContainer container, HtmlTableRow row) {
         try {
-
-
             HtmlTableCell gsm = row.getCell(gsmNrCol);
             HtmlTableCell provision = row.getCell(provisionCol);
             HtmlTableCell product = row.getCell(productCol);
@@ -172,7 +170,6 @@ public class HtmlFile extends ProvisionFile {
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Could not add customer" + row.asNormalizedText());
         }
-
     }
 
     @Override
